@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retirement Calculator – 401k & Savings Planner</title>
+  <meta name="description" content="Free retirement calculator. Plan your 401k savings, estimate your retirement nest egg, and see if you're on track to retire comfortably. Based on US retirement accounts.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏖️</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    input[type="number"],input[type="range"] { width:100%; }
+    input[type="number"] { padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px;
+      font-size:16px; outline:none; background:#f8fafc; transition:border-color .2s; }
+    input[type="number"]:focus { border-color:#6366f1; background:#fff; }
+    input[type="range"] { accent-color:#6366f1; margin-top:6px; }
+    .range-val { font-size:13px; font-weight:700; color:#6366f1; }
+    .big-result { text-align:center; padding:16px 0; }
+    .big-num { font-size:clamp(2rem,8vw,3rem); font-weight:800;
+               background:linear-gradient(135deg,#6366f1,#8b5cf6);
+               -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .big-lbl { font-size:13px; color:#64748b; margin-top:4px; }
+    .ret-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+    .ret-item { background:#f5f3ff; border-radius:10px; padding:14px; border-left:3px solid #8b5cf6; }
+    .ret-val { font-size:1.1rem; font-weight:700; color:#4f46e5; }
+    .ret-lbl { font-size:12px; color:#64748b; margin-top:3px; }
+    .progress-wrap { margin:16px 0; }
+    .progress-label { display:flex; justify-content:space-between; font-size:12px; color:#64748b; margin-bottom:6px; }
+    .progress-track { background:#e2e8f0; border-radius:99px; height:14px; overflow:hidden; }
+    .progress-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#6366f1,#8b5cf6); transition:width .8s ease; }
+    .on-track { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px 16px;
+                font-size:14px; font-weight:600; color:#166534; margin-bottom:12px; }
+    .off-track { background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:12px 16px;
+                 font-size:14px; font-weight:600; color:#991b1b; margin-bottom:12px; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="nav" style="flex-wrap:wrap">
+    <a href="index.html">🎂 Age</a>
+    <a href="tax-calculator.html">💰 Tax</a>
+    <a href="retirement-calculator.html" class="active">🏖️ Retirement</a>
+    <a href="loan-calculator.html">🏦 Loan</a>
+    <a href="college-cost-calculator.html">🎓 College</a>
+    <a href="currency-converter.html">💱 Currency</a>
+    <a href="pension-calculator.html">👴 Pension</a>
+  </nav>
+
+  <div class="badge">US 401k Planner</div>
+  <h1>Retirement Calculator</h1>
+  <p class="subtitle">How much will you have when you retire?</p>
+  <p class="trust">Free • No Sign Up • Instant Results</p>
+
+  <div class="card">
+    <div class="two-col">
+      <div class="field">
+        <label for="age">Current Age</label>
+        <input type="number" id="age" placeholder="30" min="18" max="80" value="30">
+      </div>
+      <div class="field">
+        <label for="ret-age">Retirement Age</label>
+        <input type="number" id="ret-age" placeholder="65" min="50" max="80" value="65">
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label for="salary">Annual Salary ($)</label>
+        <input type="number" id="salary" placeholder="75000" min="0" value="75000">
+      </div>
+      <div class="field">
+        <label for="current-savings">Current Savings ($)</label>
+        <input type="number" id="current-savings" placeholder="10000" min="0" value="10000">
+      </div>
+    </div>
+    <div class="field">
+      <label>401k Contribution: <span class="range-val" id="contrib-val">10%</span></label>
+      <input type="range" id="contrib" min="1" max="23" value="10"
+        oninput="document.getElementById('contrib-val').textContent=this.value+'%'">
+    </div>
+    <div class="field">
+      <label>Employer Match: <span class="range-val" id="match-val">3%</span></label>
+      <input type="range" id="match" min="0" max="10" value="3"
+        oninput="document.getElementById('match-val').textContent=this.value+'%'">
+    </div>
+    <div class="field">
+      <label>Expected Annual Return: <span class="range-val" id="return-val">7%</span></label>
+      <input type="range" id="ret-return" min="1" max="12" value="7"
+        oninput="document.getElementById('return-val').textContent=this.value+'%'">
+    </div>
+    <button class="btn" onclick="calculate()">Calculate Retirement Savings</button>
+  </div>
+
+  <div class="card result" id="result">
+    <div class="big-result">
+      <div class="big-num" id="nest-egg"></div>
+      <div class="big-lbl">Estimated nest egg at retirement</div>
+    </div>
+    <div id="track-msg"></div>
+    <div class="ret-grid">
+      <div class="ret-item"><div class="ret-val" id="r-years"></div><div class="ret-lbl">Years to retirement</div></div>
+      <div class="ret-item"><div class="ret-val" id="r-monthly-contrib"></div><div class="ret-lbl">Monthly contribution</div></div>
+      <div class="ret-item"><div class="ret-val" id="r-total-contrib"></div><div class="ret-lbl">Total you contribute</div></div>
+      <div class="ret-item"><div class="ret-val" id="r-growth"></div><div class="ret-lbl">Investment growth</div></div>
+      <div class="ret-item"><div class="ret-val" id="r-monthly-income"></div><div class="ret-lbl">Monthly income (4% rule)</div></div>
+      <div class="ret-item"><div class="ret-val" id="r-employer"></div><div class="ret-lbl">Employer match total</div></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="progress-label"><span>$0</span><span id="p-target"></span></div>
+      <div class="progress-track"><div class="progress-fill" id="p-bar" style="width:0"></div></div>
+      <div style="font-size:12px;color:#64748b;margin-top:4px">Progress toward $1M retirement goal</div>
+    </div>
+  </div>
+
+  <div class="seo">
+    <h2>About This Retirement Calculator</h2>
+    <p>This free 401k retirement calculator helps you estimate how much you'll have saved by retirement. Enter your age, salary, contribution rate, and employer match to see your projected nest egg. Uses compound interest to show the power of starting early and maximizing your 401k contributions.</p>
+  </div>
+</div>
+<script>
+  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+
+  function calculate() {
+    const age        = parseInt(document.getElementById('age').value) || 30;
+    const retAge     = parseInt(document.getElementById('ret-age').value) || 65;
+    const salary     = parseFloat(document.getElementById('salary').value) || 75000;
+    const current    = parseFloat(document.getElementById('current-savings').value) || 0;
+    const contribPct = parseInt(document.getElementById('contrib').value) / 100;
+    const matchPct   = parseInt(document.getElementById('match').value) / 100;
+    const annReturn  = parseInt(document.getElementById('ret-return').value) / 100;
+
+    if (retAge <= age) { alert('Retirement age must be greater than current age.'); return; }
+
+    const years = retAge - age;
+    const monthlyRate = annReturn / 12;
+    const months = years * 12;
+    const monthlyContrib = (salary * contribPct) / 12;
+    const monthlyMatch   = (salary * Math.min(matchPct, contribPct)) / 12;
+    const totalMonthly   = monthlyContrib + monthlyMatch;
+
+    // FV of current savings + FV of monthly contributions
+    const fvCurrent = current * Math.pow(1 + annReturn, years);
+    const fvContrib = totalMonthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
+    const nestEgg = fvCurrent + fvContrib;
+
+    const totalContrib = monthlyContrib * months;
+    const totalMatch   = monthlyMatch * months;
+    const growth = nestEgg - current - totalContrib - totalMatch;
+    const monthlyIncome = nestEgg * 0.04 / 12; // 4% safe withdrawal rule
+
+    // Rule of thumb: need 25x annual expenses; assume 80% of salary
+    const target = salary * 0.8 * 25;
+    const onTrack = nestEgg >= target;
+
+    document.getElementById('nest-egg').textContent = fmt(nestEgg);
+    document.getElementById('track-msg').innerHTML = onTrack
+      ? `<div class="on-track">✅ On track! Your savings exceed the recommended ${fmt(target)} target.</div>`
+      : `<div class="off-track">⚠️ You may fall short of the recommended ${fmt(target)} target. Consider increasing contributions.</div>`;
+
+    document.getElementById('r-years').textContent = years + ' years';
+    document.getElementById('r-monthly-contrib').textContent = fmt(monthlyContrib);
+    document.getElementById('r-total-contrib').textContent = fmt(totalContrib);
+    document.getElementById('r-growth').textContent = fmt(growth);
+    document.getElementById('r-monthly-income').textContent = fmt(monthlyIncome) + '/mo';
+    document.getElementById('r-employer').textContent = fmt(totalMatch);
+
+    const barPct = Math.min(nestEgg / 1000000 * 100, 100);
+    document.getElementById('p-target').textContent = fmt(nestEgg);
+    requestAnimationFrame(() => { document.getElementById('p-bar').style.width = barPct + '%'; });
+
+    const r = document.getElementById('result');
+    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
+  }
+</script>
+</body>
+</html>

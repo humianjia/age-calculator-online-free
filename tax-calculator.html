@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>US Income Tax Calculator 2024 – Federal Tax Estimator</title>
+  <meta name="description" content="Free US federal income tax calculator 2024. Estimate your federal income tax, effective tax rate, and take-home pay based on filing status and income.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .tax-brackets { margin-top: 16px; }
+    .bracket-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 13px; }
+    .bracket-bar-wrap { flex: 1; background: #e2e8f0; border-radius: 99px; height: 8px; overflow: hidden; }
+    .bracket-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#6366f1,#8b5cf6); transition: width .6s ease; }
+    .bracket-label { width: 90px; color: #64748b; }
+    .bracket-amt { width: 80px; text-align: right; font-weight: 600; color: #4f46e5; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .sum-item { background: #f5f3ff; border-radius: 10px; padding: 14px; border-left: 3px solid #8b5cf6; }
+    .sum-val { font-size: 1.2rem; font-weight: 700; color: #4f46e5; }
+    .sum-lbl { font-size: 12px; color: #64748b; margin-top: 3px; }
+    select { width:100%; padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px; font-size:16px;
+             outline:none; background:#f8fafc; cursor:pointer; transition:border-color .2s; }
+    select:focus { border-color:#6366f1; background:#fff; }
+    .input-prefix { position:relative; }
+    .input-prefix span { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#64748b; font-size:16px; pointer-events:none; }
+    .input-prefix input { padding-left:28px !important; }
+    input[type="number"] { width:100%; padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px;
+      font-size:16px; outline:none; background:#f8fafc; transition:border-color .2s; }
+    input[type="number"]:focus { border-color:#6366f1; background:#fff; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="nav" style="flex-wrap:wrap">
+    <a href="index.html">🎂 Age</a>
+    <a href="tax-calculator.html" class="active">💰 Tax</a>
+    <a href="retirement-calculator.html">🏖️ Retirement</a>
+    <a href="loan-calculator.html">🏦 Loan</a>
+    <a href="college-cost-calculator.html">🎓 College</a>
+    <a href="currency-converter.html">💱 Currency</a>
+    <a href="pension-calculator.html">👴 Pension</a>
+  </nav>
+
+  <div class="badge">US 2024</div>
+  <h1>Income Tax Calculator</h1>
+  <p class="subtitle">Estimate your 2024 US federal income tax & take-home pay</p>
+  <p class="trust">Free • Based on 2024 IRS Tax Brackets • No Sign Up</p>
+
+  <div class="card">
+    <div class="two-col">
+      <div class="field">
+        <label for="income">Annual Gross Income</label>
+        <div class="input-prefix"><span>$</span><input type="number" id="income" placeholder="75000" min="0"></div>
+      </div>
+      <div class="field">
+        <label for="filing">Filing Status</label>
+        <select id="filing">
+          <option value="single">Single</option>
+          <option value="married">Married Filing Jointly</option>
+          <option value="hoh">Head of Household</option>
+        </select>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label for="deductions">Additional Deductions ($)</label>
+        <div class="input-prefix"><span>$</span><input type="number" id="deductions" placeholder="0" min="0" value="0"></div>
+      </div>
+      <div class="field">
+        <label for="state">State Tax Rate (%)</label>
+        <input type="number" id="state" placeholder="0" min="0" max="15" step="0.1" value="0">
+      </div>
+    </div>
+    <button class="btn" onclick="calculate()">Calculate Tax</button>
+  </div>
+
+  <div class="card result" id="result">
+    <div class="result-main" id="main-text"></div>
+    <div class="summary-grid">
+      <div class="sum-item"><div class="sum-val" id="s-federal"></div><div class="sum-lbl">Federal Tax</div></div>
+      <div class="sum-item"><div class="sum-val" id="s-state"></div><div class="sum-lbl">State Tax (est.)</div></div>
+      <div class="sum-item"><div class="sum-val" id="s-fica"></div><div class="sum-lbl">FICA (SS + Medicare)</div></div>
+      <div class="sum-item"><div class="sum-val" id="s-takehome"></div><div class="sum-lbl">Take-Home Pay / yr</div></div>
+      <div class="sum-item"><div class="sum-val" id="s-effective"></div><div class="sum-lbl">Effective Tax Rate</div></div>
+      <div class="sum-item"><div class="sum-val" id="s-monthly"></div><div class="sum-lbl">Monthly Take-Home</div></div>
+    </div>
+    <div class="section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin:16px 0 10px">📊 Tax Bracket Breakdown</div>
+    <div class="tax-brackets" id="brackets"></div>
+  </div>
+
+  <div class="seo">
+    <h2>About This US Income Tax Calculator</h2>
+    <p>This free federal income tax calculator uses 2024 IRS tax brackets to estimate your federal tax liability, effective tax rate, and take-home pay. Enter your gross income and filing status to see a full breakdown by tax bracket. Note: this is an estimate — consult a tax professional for exact figures.</p>
+  </div>
+</div>
+<script>
+  // 2024 Federal Tax Brackets
+  const BRACKETS = {
+    single:  [[11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[609350,.35],[Infinity,.37]],
+    married: [[23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[Infinity,.37]],
+    hoh:     [[16550,.10],[63100,.12],[100500,.22],[191950,.24],[243700,.32],[609350,.35],[Infinity,.37]],
+  };
+  const STD_DED = { single: 14600, married: 29200, hoh: 21900 };
+
+  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
+  function pct(n) { return n.toFixed(1) + '%'; }
+
+  function calcFederal(taxable, filing) {
+    const brackets = BRACKETS[filing];
+    let tax = 0, prev = 0;
+    const breakdown = [];
+    for (const [limit, rate] of brackets) {
+      if (taxable <= prev) break;
+      const chunk = Math.min(taxable, limit) - prev;
+      const amount = chunk * rate;
+      breakdown.push({ rate, chunk, amount, from: prev, to: Math.min(taxable, limit) });
+      tax += amount;
+      prev = limit;
+    }
+    return { tax, breakdown };
+  }
+
+  function calculate() {
+    const income = parseFloat(document.getElementById('income').value) || 0;
+    const filing = document.getElementById('filing').value;
+    const extraDed = parseFloat(document.getElementById('deductions').value) || 0;
+    const stateRate = parseFloat(document.getElementById('state').value) || 0;
+
+    if (income <= 0) { alert('Please enter your annual income.'); return; }
+
+    const stdDed = STD_DED[filing];
+    const totalDed = stdDed + extraDed;
+    const taxable = Math.max(0, income - totalDed);
+
+    const { tax: federal, breakdown } = calcFederal(taxable, filing);
+    const stateTax = income * (stateRate / 100);
+    const ss = Math.min(income, 168600) * 0.062;   // 2024 SS wage base
+    const medicare = income * 0.0145;
+    const fica = ss + medicare;
+    const totalTax = federal + stateTax + fica;
+    const takeHome = income - totalTax;
+    const effectiveRate = (totalTax / income) * 100;
+
+    document.getElementById('main-text').textContent =
+      `On $${income.toLocaleString()} income, you owe ~${fmt(federal)} in federal tax`;
+    document.getElementById('s-federal').textContent = fmt(federal);
+    document.getElementById('s-state').textContent = fmt(stateTax);
+    document.getElementById('s-fica').textContent = fmt(fica);
+    document.getElementById('s-takehome').textContent = fmt(takeHome);
+    document.getElementById('s-effective').textContent = pct(effectiveRate);
+    document.getElementById('s-monthly').textContent = fmt(takeHome / 12);
+
+    // Bracket breakdown bars
+    const maxAmt = Math.max(...breakdown.map(b => b.amount), 1);
+    document.getElementById('brackets').innerHTML = breakdown.map(b =>
+      `<div class="bracket-row">
+        <div class="bracket-label">${(b.rate*100).toFixed(0)}% bracket</div>
+        <div class="bracket-bar-wrap"><div class="bracket-bar" style="width:${(b.amount/maxAmt*100).toFixed(1)}%"></div></div>
+        <div class="bracket-amt">${fmt(b.amount)}</div>
+      </div>`
+    ).join('');
+
+    const r = document.getElementById('result');
+    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
+  }
+</script>
+</body>
+</html>
