@@ -3,77 +3,48 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>US Income Tax Calculator 2024 – Federal Tax Estimator</title>
-  <meta name="description" content="Free US federal income tax calculator 2024. Estimate your federal income tax, effective tax rate, and take-home pay based on filing status and income.">
+  <title>Income Tax Calculator – US, UK, Canada, Australia, Germany, China</title>
+  <meta name="description" content="Free income tax calculator for US, UK, Canada, Australia, Germany, France, Japan, China and more. Estimate your tax, effective rate, and take-home pay instantly.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
   <link rel="stylesheet" href="styles.css">
   <style>
-    .tax-brackets { margin-top: 16px; }
-    .bracket-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 13px; }
-    .bracket-bar-wrap { flex: 1; background: #e2e8f0; border-radius: 99px; height: 8px; overflow: hidden; }
-    .bracket-bar { height: 100%; border-radius: 99px; background: linear-gradient(90deg,#6366f1,#8b5cf6); transition: width .6s ease; }
-    .bracket-label { width: 90px; color: #64748b; }
-    .bracket-amt { width: 80px; text-align: right; font-weight: 600; color: #4f46e5; }
-    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-    .sum-item { background: #f5f3ff; border-radius: 10px; padding: 14px; border-left: 3px solid #8b5cf6; }
-    .sum-val { font-size: 1.2rem; font-weight: 700; color: #4f46e5; }
-    .sum-lbl { font-size: 12px; color: #64748b; margin-top: 3px; }
-    select { width:100%; padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px; font-size:16px;
-             outline:none; background:#f8fafc; cursor:pointer; transition:border-color .2s; }
-    select:focus { border-color:#6366f1; background:#fff; }
-    .input-prefix { position:relative; }
-    .input-prefix span { position:absolute; left:14px; top:50%; transform:translateY(-50%); color:#64748b; font-size:16px; pointer-events:none; }
-    .input-prefix input { padding-left:28px !important; }
-    input[type="number"] { width:100%; padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px;
-      font-size:16px; outline:none; background:#f8fafc; transition:border-color .2s; }
-    input[type="number"]:focus { border-color:#6366f1; background:#fff; }
+    input[type="number"],select{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;outline:none;background:#f8fafc;transition:border-color .2s}
+    input[type="number"]:focus,select:focus{border-color:#6366f1;background:#fff}
+    .country-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+    @media(max-width:480px){.country-grid{grid-template-columns:repeat(3,1fr)}}
+    .c-btn{padding:8px 4px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;text-align:center;transition:all .2s}
+    .c-btn.active{border-color:#6366f1;color:#6366f1;background:#ede9fe}
+    .sum-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+    .sum-item{background:#f5f3ff;border-radius:10px;padding:14px;border-left:3px solid #8b5cf6}
+    .sum-val{font-size:1.15rem;font-weight:700;color:#4f46e5}
+    .sum-lbl{font-size:12px;color:#64748b;margin-top:3px}
+    .bracket-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:13px}
+    .b-bar-wrap{flex:1;background:#e2e8f0;border-radius:99px;height:8px;overflow:hidden}
+    .b-bar{height:100%;border-radius:99px;background:linear-gradient(90deg,#6366f1,#8b5cf6);transition:width .6s}
+    .b-label{width:90px;color:#64748b}.b-amt{width:90px;text-align:right;font-weight:600;color:#4f46e5}
   </style>
 </head>
 <body>
 <div class="page">
   <nav class="nav" style="flex-wrap:wrap">
-    <a href="index.html">🎂 Age</a>
-    <a href="age-difference.html">↔ Difference</a>
-    <a href="birthday-countdown.html">⏳ Countdown</a>
-    <a href="date-calculator.html">📅 Date Calc</a>
-    <a href="day-of-week.html">📆 Day of Week</a>
-    <a href="life-progress.html">🌱 Life Progress</a>
-    <a href="tax-calculator.html" class="active">💰 Tax</a>
-    <a href="retirement-calculator.html">🏖️ Retirement</a>
-    <a href="loan-calculator.html">🏦 Loan</a>
-    <a href="college-cost-calculator.html">🎓 College</a>
-    <a href="currency-converter.html">💱 Currency</a>
-    <a href="pension-calculator.html">👴 Pension</a>
+    <a href="index.html">🎂 Age</a><a href="age-difference.html">↔ Difference</a><a href="birthday-countdown.html">⏳ Countdown</a><a href="date-calculator.html">📅 Date Calc</a><a href="day-of-week.html">📆 Day of Week</a><a href="life-progress.html">🌱 Life Progress</a><a href="tax-calculator.html" class="active">💰 Tax</a><a href="retirement-calculator.html">🏖️ Retirement</a><a href="loan-calculator.html">🏦 Loan</a><a href="college-cost-calculator.html">🎓 College</a><a href="currency-converter.html">💱 Currency</a><a href="pension-calculator.html">👴 Pension</a>
   </nav>
 
-  <div class="badge">US 2024</div>
+  <div class="badge">Multi-Country</div>
   <h1>Income Tax Calculator</h1>
-  <p class="subtitle">Estimate your 2024 US federal income tax & take-home pay</p>
-  <p class="trust">Free • Based on 2024 IRS Tax Brackets • No Sign Up</p>
+  <p class="subtitle">Estimate your income tax & take-home pay — select your country</p>
+  <p class="trust">Free • 8 Countries • No Sign Up</p>
 
   <div class="card">
-    <div class="two-col">
-      <div class="field">
-        <label for="income">Annual Gross Income</label>
-        <div class="input-prefix"><span>$</span><input type="number" id="income" placeholder="75000" min="0"></div>
-      </div>
-      <div class="field">
-        <label for="filing">Filing Status</label>
-        <select id="filing">
-          <option value="single">Single</option>
-          <option value="married">Married Filing Jointly</option>
-          <option value="hoh">Head of Household</option>
-        </select>
-      </div>
+    <div class="field"><label>Select Country</label>
+      <div class="country-grid" id="country-grid"></div>
     </div>
     <div class="two-col">
-      <div class="field">
-        <label for="deductions">Additional Deductions ($)</label>
-        <div class="input-prefix"><span>$</span><input type="number" id="deductions" placeholder="0" min="0" value="0"></div>
+      <div class="field"><label for="income">Annual Gross Income</label>
+        <input type="number" id="income" placeholder="75000" min="0">
       </div>
-      <div class="field">
-        <label for="state">State Tax Rate (%)</label>
-        <input type="number" id="state" placeholder="0" min="0" max="15" step="0.1" value="0">
+      <div class="field"><label for="filing">Filing Status</label>
+        <select id="filing"></select>
       </div>
     </div>
     <button class="btn" onclick="calculate()">Calculate Tax</button>
@@ -81,139 +52,172 @@
 
   <div class="card result" id="result">
     <div class="result-main" id="main-text"></div>
-    <div class="summary-grid">
-      <div class="sum-item"><div class="sum-val" id="s-federal"></div><div class="sum-lbl">Federal Tax</div></div>
-      <div class="sum-item"><div class="sum-val" id="s-state"></div><div class="sum-lbl">State Tax (est.)</div></div>
-      <div class="sum-item"><div class="sum-val" id="s-fica"></div><div class="sum-lbl">FICA (SS + Medicare)</div></div>
-      <div class="sum-item"><div class="sum-val" id="s-takehome"></div><div class="sum-lbl">Take-Home Pay / yr</div></div>
+    <div class="sum-grid">
+      <div class="sum-item"><div class="sum-val" id="s-tax"></div><div class="sum-lbl" id="s-tax-lbl">Income Tax</div></div>
+      <div class="sum-item"><div class="sum-val" id="s-social"></div><div class="sum-lbl" id="s-social-lbl">Social Contributions</div></div>
+      <div class="sum-item"><div class="sum-val" id="s-takehome"></div><div class="sum-lbl">Take-Home / Year</div></div>
+      <div class="sum-item"><div class="sum-val" id="s-monthly"></div><div class="sum-lbl">Take-Home / Month</div></div>
       <div class="sum-item"><div class="sum-val" id="s-effective"></div><div class="sum-lbl">Effective Tax Rate</div></div>
-      <div class="sum-item"><div class="sum-val" id="s-monthly"></div><div class="sum-lbl">Monthly Take-Home</div></div>
+      <div class="sum-item"><div class="sum-val" id="s-marginal"></div><div class="sum-lbl">Marginal Rate</div></div>
     </div>
-    <div class="section-title" style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin:16px 0 10px">📊 Tax Bracket Breakdown</div>
-    <div class="tax-brackets" id="brackets"></div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin:16px 0 10px">📊 Tax Bracket Breakdown</div>
+    <div id="brackets"></div>
   </div>
 
   <div class="seo">
-    <h2>About This US Income Tax Calculator</h2>
-    <p>This free federal income tax calculator uses 2024 IRS tax brackets to estimate your federal tax liability, effective tax rate, and take-home pay. Enter your gross income and filing status to see a full breakdown by tax bracket. Note: this is an estimate — consult a tax professional for exact figures.</p>
+    <h2>About This Income Tax Calculator</h2>
+    <p>This free multi-country income tax calculator covers the US, UK, Canada, Australia, Germany, France, Japan, and China. Select your country to instantly estimate your income tax, social contributions, effective tax rate, and monthly take-home pay. Results are estimates — consult a tax professional for exact figures.</p>
   </div>
 </div>
 <script>
-  // 2024 Federal Tax Brackets
-  const BRACKETS = {
-    single:  [[11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[609350,.35],[Infinity,.37]],
-    married: [[23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[Infinity,.37]],
-    hoh:     [[16550,.10],[63100,.12],[100500,.22],[191950,.24],[243700,.32],[609350,.35],[Infinity,.37]],
-  };
-  const STD_DED = { single: 14600, married: 29200, hoh: 21900 };
-
-  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
-  function pct(n) { return n.toFixed(1) + '%'; }
-
-  function calcFederal(taxable, filing) {
-    const brackets = BRACKETS[filing];
-    let tax = 0, prev = 0;
-    const breakdown = [];
-    for (const [limit, rate] of brackets) {
-      if (taxable <= prev) break;
-      const chunk = Math.min(taxable, limit) - prev;
-      const amount = chunk * rate;
-      breakdown.push({ rate, chunk, amount, from: prev, to: Math.min(taxable, limit) });
-      tax += amount;
-      prev = limit;
-    }
-    return { tax, breakdown };
+const COUNTRIES = {
+  US:{flag:'🇺🇸',name:'United States',currency:'$',socialLabel:'FICA (SS+Medicare)',
+    filingOptions:[['single','Single'],['married','Married Filing Jointly'],['hoh','Head of Household']],
+    stdDed:{single:14600,married:29200,hoh:21900},
+    brackets:{
+      single:[[11600,.10],[47150,.12],[100525,.22],[191950,.24],[243725,.32],[609350,.35],[Infinity,.37]],
+      married:[[23200,.10],[94300,.12],[201050,.22],[383900,.24],[487450,.32],[731200,.35],[Infinity,.37]],
+      hoh:[[16550,.10],[63100,.12],[100500,.22],[191950,.24],[243700,.32],[609350,.35],[Infinity,.37]]
+    },
+    social:(inc)=>Math.min(inc,168600)*.062+inc*.0145
+  },
+  UK:{flag:'🇬🇧',name:'United Kingdom',currency:'£',socialLabel:'National Insurance',
+    filingOptions:[['standard','Standard']],
+    stdDed:{standard:12570},
+    brackets:{standard:[[12570,0],[50270,.20],[125140,.40],[Infinity,.45]]},
+    social:(inc)=>inc>12570?Math.min(inc,50270-12570)*.12+Math.max(0,inc-50270)*.02:0
+  },
+  CA:{flag:'🇨🇦',name:'Canada',currency:'CA$',socialLabel:'CPP + EI',
+    filingOptions:[['standard','Standard']],
+    stdDed:{standard:15705},
+    brackets:{standard:[[55867,.15],[111733,.205],[154906,.26],[220000,.29],[Infinity,.33]]},
+    social:(inc)=>Math.min(inc,68500)*.0595+Math.min(inc,63200)*.0166
+  },
+  AU:{flag:'🇦🇺',name:'Australia',currency:'A$',socialLabel:'Medicare Levy',
+    filingOptions:[['resident','Resident'],['nonresident','Non-Resident']],
+    stdDed:{resident:18200,nonresident:0},
+    brackets:{
+      resident:[[18200,0],[45000,.19],[120000,.325],[180000,.37],[Infinity,.45]],
+      nonresident:[[0,.325],[120000,.37],[180000,.45],[Infinity,.45]]
+    },
+    social:(inc)=>inc>23226?inc*.02:0
+  },
+  DE:{flag:'🇩🇪',name:'Germany',currency:'€',socialLabel:'Social Insurance (~20%)',
+    filingOptions:[['single','Single (Class I)'],['married','Married (Class III)']],
+    stdDed:{single:10908,married:21816},
+    brackets:{
+      single:[[10908,0],[15999,.14],[62809,.42],[277825,.45],[Infinity,.45]],
+      married:[[21816,0],[31998,.14],[125618,.42],[555650,.45],[Infinity,.45]]
+    },
+    social:(inc)=>inc*.195
+  },
+  FR:{flag:'🇫🇷',name:'France',currency:'€',socialLabel:'Social Charges (~22%)',
+    filingOptions:[['standard','Standard']],
+    stdDed:{standard:10777},
+    brackets:{standard:[[11294,0],[28797,.11],[82341,.30],[177106,.41],[Infinity,.45]]},
+    social:(inc)=>inc*.22
+  },
+  JP:{flag:'🇯🇵',name:'Japan',currency:'¥',socialLabel:'Social Insurance (~15%)',
+    filingOptions:[['standard','Standard']],
+    stdDed:{standard:480000},
+    brackets:{standard:[[1950000,.05],[3300000,.10],[6950000,.20],[9000000,.23],[18000000,.33],[40000000,.40],[Infinity,.45]]},
+    social:(inc)=>inc*.15
+  },
+  CN:{flag:'🇨🇳',name:'China',currency:'¥',socialLabel:'Social Insurance (~23%)',
+    filingOptions:[['standard','Standard']],
+    stdDed:{standard:60000},
+    brackets:{standard:[[36000,.03],[144000,.10],[300000,.20],[420000,.25],[660000,.30],[960000,.35],[Infinity,.45]]},
+    social:(inc)=>inc*.23
   }
+};
 
-  function calculate() {
-    const income = parseFloat(document.getElementById('income').value) || 0;
-    const filing = document.getElementById('filing').value;
-    const extraDed = parseFloat(document.getElementById('deductions').value) || 0;
-    const stateRate = parseFloat(document.getElementById('state').value) || 0;
+let _country = 'US';
 
-    if (income <= 0) { alert('Please enter your annual income.'); return; }
+function buildCountryGrid(){
+  document.getElementById('country-grid').innerHTML = Object.entries(COUNTRIES).map(([k,v])=>
+    `<div class="c-btn${k===_country?' active':''}" onclick="selectCountry('${k}')">${v.flag}<br>${v.name.split(' ')[0]}</div>`
+  ).join('');
+}
 
-    const stdDed = STD_DED[filing];
-    const totalDed = stdDed + extraDed;
-    const taxable = Math.max(0, income - totalDed);
+function selectCountry(code){
+  _country = code;
+  buildCountryGrid();
+  const c = COUNTRIES[code];
+  const sel = document.getElementById('filing');
+  sel.innerHTML = c.filingOptions.map(([v,l])=>`<option value="${v}">${l}</option>`).join('');
+  document.getElementById('income').placeholder = code==='JP'||code==='CN'?'5000000':'75000';
+  document.getElementById('result').classList.remove('show');
+}
 
-    const { tax: federal, breakdown } = calcFederal(taxable, filing);
-    const stateTax = income * (stateRate / 100);
-    const ss = Math.min(income, 168600) * 0.062;   // 2024 SS wage base
-    const medicare = income * 0.0145;
-    const fica = ss + medicare;
-    const totalTax = federal + stateTax + fica;
-    const takeHome = income - totalTax;
-    const effectiveRate = (totalTax / income) * 100;
-
-    document.getElementById('main-text').textContent =
-      `On $${income.toLocaleString()} income, you owe ~${fmt(federal)} in federal tax`;
-    document.getElementById('s-federal').textContent = fmt(federal);
-    document.getElementById('s-state').textContent = fmt(stateTax);
-    document.getElementById('s-fica').textContent = fmt(fica);
-    document.getElementById('s-takehome').textContent = fmt(takeHome);
-    document.getElementById('s-effective').textContent = pct(effectiveRate);
-    document.getElementById('s-monthly').textContent = fmt(takeHome / 12);
-
-    // Bracket breakdown bars
-    const maxAmt = Math.max(...breakdown.map(b => b.amount), 1);
-    document.getElementById('brackets').innerHTML = breakdown.map(b =>
-      `<div class="bracket-row">
-        <div class="bracket-label">${(b.rate*100).toFixed(0)}% bracket</div>
-        <div class="bracket-bar-wrap"><div class="bracket-bar" style="width:${(b.amount/maxAmt*100).toFixed(1)}%"></div></div>
-        <div class="bracket-amt">${fmt(b.amount)}</div>
-      </div>`
-    ).join('');
-
-    const r = document.getElementById('result');
-    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
+function calcBrackets(taxable, brackets){
+  let tax=0, prev=0; const bd=[];
+  for(const [limit,rate] of brackets){
+    if(taxable<=prev) break;
+    const chunk=Math.min(taxable,limit)-prev;
+    const amt=chunk*rate;
+    if(rate>0) bd.push({rate,amt});
+    tax+=amt; prev=limit;
   }
+  return {tax,bd};
+}
+
+function fmt(n,sym){return sym+(Math.round(n)).toLocaleString();}
+
+function calculate(){
+  const inc=parseFloat(document.getElementById('income').value)||0;
+  if(inc<=0){alert('Please enter your annual income.');return;}
+  const filing=document.getElementById('filing').value;
+  const c=COUNTRIES[_country];
+  const ded=c.stdDed[filing]||0;
+  const taxable=Math.max(0,inc-ded);
+  const {tax,bd}=calcBrackets(taxable,c.brackets[filing]);
+  const social=c.social(inc);
+  const total=tax+social;
+  const takeHome=inc-total;
+  const effective=(total/inc*100);
+  const marginal=c.brackets[filing].find(([l])=>taxable<=l)?.[1]||0;
+  const sym=c.currency;
+
+  document.getElementById('main-text').textContent=
+    `On ${sym}${inc.toLocaleString()} income, estimated tax is ${fmt(tax,sym)}`;
+  document.getElementById('s-tax').textContent=fmt(tax,sym);
+  document.getElementById('s-social').textContent=fmt(social,sym);
+  document.getElementById('s-social-lbl').textContent=c.socialLabel;
+  document.getElementById('s-takehome').textContent=fmt(takeHome,sym);
+  document.getElementById('s-monthly').textContent=fmt(takeHome/12,sym);
+  document.getElementById('s-effective').textContent=effective.toFixed(1)+'%';
+  document.getElementById('s-marginal').textContent=(marginal*100).toFixed(0)+'%';
+
+  const maxAmt=Math.max(...bd.map(b=>b.amt),1);
+  document.getElementById('brackets').innerHTML=bd.map(b=>
+    `<div class="bracket-row">
+      <div class="b-label">${(b.rate*100).toFixed(0)}% bracket</div>
+      <div class="b-bar-wrap"><div class="b-bar" style="width:${(b.amt/maxAmt*100).toFixed(1)}%"></div></div>
+      <div class="b-amt">${fmt(b.amt,sym)}</div>
+    </div>`
+  ).join('');
+
+  const r=document.getElementById('result');
+  r.classList.remove('show');void r.offsetWidth;r.classList.add('show');
+}
+
+buildCountryGrid();
+selectCountry('US');
 </script>
-
 <!-- Cookie Consent Banner -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
-  background:#1e293b;color:#e2e8f0;padding:16px 20px;
-  box-shadow:0 -4px 20px rgba(0,0,0,.2)">
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1e293b;color:#e2e8f0;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.2)">
   <div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">
-      🍪 We use cookies to analyze site traffic and improve your experience.
-      See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.
-    </div>
+    <div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">🍪 We use cookies to analyze site traffic. See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.</div>
     <div style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);
-        color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">
-        Accept All
-      </button>
-      <button onclick="declineCookies()" style="padding:8px 18px;background:transparent;
-        color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">
-        Decline
-      </button>
+      <button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Accept All</button>
+      <button onclick="declineCookies()" style="padding:8px 18px;background:transparent;color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">Decline</button>
     </div>
   </div>
 </div>
-<script>
-  (function() {
-    var consent = localStorage.getItem('cookie_consent');
-    if (!consent) document.getElementById('cookie-banner').style.display = 'block';
-  })();
-  function acceptCookies() {
-    localStorage.setItem('cookie_consent', 'accepted');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-  function declineCookies() {
-    localStorage.setItem('cookie_consent', 'declined');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-</script>
-
+<script>(function(){var c=localStorage.getItem('cookie_consent');if(!c)document.getElementById('cookie-banner').style.display='block';})();function acceptCookies(){localStorage.setItem('cookie_consent','accepted');document.getElementById('cookie-banner').style.display='none';}function declineCookies(){localStorage.setItem('cookie_consent','declined');document.getElementById('cookie-banner').style.display='none';}</script>
 <!-- Footer -->
-<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;
-  border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2">
-  <div style="margin-bottom:8px">
-    <a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a>
-    <a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a>
-    <a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a>
-  </div>
+<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2">
+  <div style="margin-bottom:8px"><a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a><a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a><a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a></div>
   <div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div>
   <div style="margin-top:4px">All results are estimates for informational purposes only.</div>
 </footer>

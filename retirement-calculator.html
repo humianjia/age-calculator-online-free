@@ -3,225 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Retirement Calculator – 401k & Savings Planner</title>
-  <meta name="description" content="Free retirement calculator. Plan your 401k savings, estimate your retirement nest egg, and see if you're on track to retire comfortably. Based on US retirement accounts.">
+  <title>Retirement Calculator – US, UK, Canada, Australia, Germany & More</title>
+  <meta name="description" content="Free retirement savings calculator for US 401k, UK pension, Canada RRSP, Australia superannuation and more. Estimate your nest egg and monthly retirement income.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏖️</text></svg>">
   <link rel="stylesheet" href="styles.css">
   <style>
-    input[type="number"],input[type="range"] { width:100%; }
-    input[type="number"] { padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px;
-      font-size:16px; outline:none; background:#f8fafc; transition:border-color .2s; }
-    input[type="number"]:focus { border-color:#6366f1; background:#fff; }
-    input[type="range"] { accent-color:#6366f1; margin-top:6px; }
-    .range-val { font-size:13px; font-weight:700; color:#6366f1; }
-    .big-result { text-align:center; padding:16px 0; }
-    .big-num { font-size:clamp(2rem,8vw,3rem); font-weight:800;
-               background:linear-gradient(135deg,#6366f1,#8b5cf6);
-               -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .big-lbl { font-size:13px; color:#64748b; margin-top:4px; }
-    .ret-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
-    .ret-item { background:#f5f3ff; border-radius:10px; padding:14px; border-left:3px solid #8b5cf6; }
-    .ret-val { font-size:1.1rem; font-weight:700; color:#4f46e5; }
-    .ret-lbl { font-size:12px; color:#64748b; margin-top:3px; }
-    .progress-wrap { margin:16px 0; }
-    .progress-label { display:flex; justify-content:space-between; font-size:12px; color:#64748b; margin-bottom:6px; }
-    .progress-track { background:#e2e8f0; border-radius:99px; height:14px; overflow:hidden; }
-    .progress-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,#6366f1,#8b5cf6); transition:width .8s ease; }
-    .on-track { background:#f0fdf4; border:1px solid #bbf7d0; border-radius:10px; padding:12px 16px;
-                font-size:14px; font-weight:600; color:#166534; margin-bottom:12px; }
-    .off-track { background:#fef2f2; border:1px solid #fecaca; border-radius:10px; padding:12px 16px;
-                 font-size:14px; font-weight:600; color:#991b1b; margin-bottom:12px; }
+    input[type="number"],input[type="range"]{width:100%}
+    input[type="number"]{padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;outline:none;background:#f8fafc;transition:border-color .2s}
+    input[type="number"]:focus{border-color:#6366f1;background:#fff}
+    input[type="range"]{accent-color:#6366f1;margin-top:6px}
+    .rv{font-size:13px;font-weight:700;color:#6366f1}
+    .cg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+    @media(max-width:480px){.cg{grid-template-columns:repeat(3,1fr)}}
+    .cb{padding:8px 4px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;text-align:center;transition:all .2s}
+    .cb.active{border-color:#6366f1;color:#6366f1;background:#ede9fe}
+    .rg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+    .ri{background:#f5f3ff;border-radius:10px;padding:14px;border-left:3px solid #8b5cf6}
+    .rv2{font-size:1.1rem;font-weight:700;color:#4f46e5}
+    .rl{font-size:12px;color:#64748b;margin-top:3px}
+    .bn{font-size:clamp(2rem,8vw,3rem);font-weight:800;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+    .pt{background:#e2e8f0;border-radius:99px;height:14px;overflow:hidden;margin:8px 0}
+    .pf{height:100%;border-radius:99px;background:linear-gradient(90deg,#6366f1,#8b5cf6);transition:width .8s ease}
+    .ot{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;color:#166534;margin-bottom:12px}
+    .ft{background:#fef2f2;border:1px solid #fecaca;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;color:#991b1b;margin-bottom:12px}
   </style>
 </head>
 <body>
 <div class="page">
   <nav class="nav" style="flex-wrap:wrap">
-    <a href="index.html">🎂 Age</a>
-    <a href="age-difference.html">↔ Difference</a>
-    <a href="birthday-countdown.html">⏳ Countdown</a>
-    <a href="date-calculator.html">📅 Date Calc</a>
-    <a href="day-of-week.html">📆 Day of Week</a>
-    <a href="life-progress.html">🌱 Life Progress</a>
-    <a href="tax-calculator.html">💰 Tax</a>
-    <a href="retirement-calculator.html" class="active">🏖️ Retirement</a>
-    <a href="loan-calculator.html">🏦 Loan</a>
-    <a href="college-cost-calculator.html">🎓 College</a>
-    <a href="currency-converter.html">💱 Currency</a>
-    <a href="pension-calculator.html">👴 Pension</a>
+    <a href="index.html">🎂 Age</a><a href="age-difference.html">↔ Difference</a><a href="birthday-countdown.html">⏳ Countdown</a><a href="date-calculator.html">📅 Date Calc</a><a href="day-of-week.html">📆 Day of Week</a><a href="life-progress.html">🌱 Life Progress</a><a href="tax-calculator.html">💰 Tax</a><a href="retirement-calculator.html" class="active">🏖️ Retirement</a><a href="loan-calculator.html">🏦 Loan</a><a href="college-cost-calculator.html">🎓 College</a><a href="currency-converter.html">💱 Currency</a><a href="pension-calculator.html">👴 Pension</a>
   </nav>
-
-  <div class="badge">US 401k Planner</div>
+  <div class="badge">Multi-Country</div>
   <h1>Retirement Calculator</h1>
-  <p class="subtitle">How much will you have when you retire?</p>
-  <p class="trust">Free • No Sign Up • Instant Results</p>
-
+  <p class="subtitle">Estimate your retirement nest egg — select your country</p>
+  <p class="trust">Free • 8 Countries • No Sign Up</p>
   <div class="card">
+    <div class="field"><label>Select Country</label><div class="cg" id="cg"></div></div>
     <div class="two-col">
-      <div class="field">
-        <label for="age">Current Age</label>
-        <input type="number" id="age" placeholder="30" min="18" max="80" value="30">
-      </div>
-      <div class="field">
-        <label for="ret-age">Retirement Age</label>
-        <input type="number" id="ret-age" placeholder="65" min="50" max="80" value="65">
-      </div>
+      <div class="field"><label for="age">Current Age</label><input type="number" id="age" value="30" min="18" max="70"></div>
+      <div class="field"><label for="ra">Retirement Age</label><input type="number" id="ra" value="65" min="50" max="80"></div>
     </div>
     <div class="two-col">
-      <div class="field">
-        <label for="salary">Annual Salary ($)</label>
-        <input type="number" id="salary" placeholder="75000" min="0" value="75000">
-      </div>
-      <div class="field">
-        <label for="current-savings">Current Savings ($)</label>
-        <input type="number" id="current-savings" placeholder="10000" min="0" value="10000">
-      </div>
+      <div class="field"><label for="sal">Annual Salary</label><input type="number" id="sal" value="75000" min="0"></div>
+      <div class="field"><label for="sav">Current Savings</label><input type="number" id="sav" value="10000" min="0"></div>
     </div>
-    <div class="field">
-      <label>401k Contribution: <span class="range-val" id="contrib-val">10%</span></label>
-      <input type="range" id="contrib" min="1" max="23" value="10"
-        oninput="document.getElementById('contrib-val').textContent=this.value+'%'">
-    </div>
-    <div class="field">
-      <label>Employer Match: <span class="range-val" id="match-val">3%</span></label>
-      <input type="range" id="match" min="0" max="10" value="3"
-        oninput="document.getElementById('match-val').textContent=this.value+'%'">
-    </div>
-    <div class="field">
-      <label>Expected Annual Return: <span class="range-val" id="return-val">7%</span></label>
-      <input type="range" id="ret-return" min="1" max="12" value="7"
-        oninput="document.getElementById('return-val').textContent=this.value+'%'">
-    </div>
-    <button class="btn" onclick="calculate()">Calculate Retirement Savings</button>
+    <div class="field"><label>Contribution Rate: <span class="rv" id="cv">10%</span></label><input type="range" id="cr" min="1" max="30" value="10" oninput="document.getElementById('cv').textContent=this.value+'%'"></div>
+    <div class="field"><label>Expected Annual Return: <span class="rv" id="rv">7%</span></label><input type="range" id="rr" min="1" max="12" value="7" oninput="document.getElementById('rv').textContent=this.value+'%'"></div>
+    <button class="btn" onclick="calc()">Calculate Retirement Savings</button>
   </div>
-
   <div class="card result" id="result">
-    <div class="big-result">
-      <div class="big-num" id="nest-egg"></div>
-      <div class="big-lbl">Estimated nest egg at retirement</div>
+    <div style="text-align:center;padding:12px 0 8px"><div class="bn" id="ne"></div><div style="font-size:13px;color:#64748b;margin-top:4px">Estimated nest egg at retirement</div></div>
+    <div id="tm"></div>
+    <div class="rg">
+      <div class="ri"><div class="rv2" id="r1"></div><div class="rl">Years to retirement</div></div>
+      <div class="ri"><div class="rv2" id="r2"></div><div class="rl" id="l2">Monthly contribution</div></div>
+      <div class="ri"><div class="rv2" id="r3"></div><div class="rl">Total contributed</div></div>
+      <div class="ri"><div class="rv2" id="r4"></div><div class="rl">Investment growth</div></div>
+      <div class="ri"><div class="rv2" id="r5"></div><div class="rl">Monthly income (4% rule)</div></div>
+      <div class="ri"><div class="rv2" id="r6"></div><div class="rl" id="l6">Employer contribution</div></div>
     </div>
-    <div id="track-msg"></div>
-    <div class="ret-grid">
-      <div class="ret-item"><div class="ret-val" id="r-years"></div><div class="ret-lbl">Years to retirement</div></div>
-      <div class="ret-item"><div class="ret-val" id="r-monthly-contrib"></div><div class="ret-lbl">Monthly contribution</div></div>
-      <div class="ret-item"><div class="ret-val" id="r-total-contrib"></div><div class="ret-lbl">Total you contribute</div></div>
-      <div class="ret-item"><div class="ret-val" id="r-growth"></div><div class="ret-lbl">Investment growth</div></div>
-      <div class="ret-item"><div class="ret-val" id="r-monthly-income"></div><div class="ret-lbl">Monthly income (4% rule)</div></div>
-      <div class="ret-item"><div class="ret-val" id="r-employer"></div><div class="ret-lbl">Employer match total</div></div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-label"><span>$0</span><span id="p-target"></span></div>
-      <div class="progress-track"><div class="progress-fill" id="p-bar" style="width:0"></div></div>
-      <div style="font-size:12px;color:#64748b;margin-top:4px">Progress toward $1M retirement goal</div>
-    </div>
+    <div style="font-size:12px;color:#64748b;margin-bottom:6px">Progress toward retirement goal</div>
+    <div class="pt"><div class="pf" id="pb" style="width:0"></div></div>
   </div>
-
-  <div class="seo">
-    <h2>About This Retirement Calculator</h2>
-    <p>This free 401k retirement calculator helps you estimate how much you'll have saved by retirement. Enter your age, salary, contribution rate, and employer match to see your projected nest egg. Uses compound interest to show the power of starting early and maximizing your 401k contributions.</p>
-  </div>
+  <div class="seo"><h2>About This Retirement Calculator</h2><p>This free multi-country retirement calculator covers US 401k, UK workplace pension, Canada RRSP, Australia superannuation, Germany Riester-Rente, France PER, Japan iDeCo, and China enterprise annuity. Enter your age, salary, and contribution rate to see your projected retirement nest egg and monthly income.</p></div>
 </div>
 <script>
-  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
-
-  function calculate() {
-    const age        = parseInt(document.getElementById('age').value) || 30;
-    const retAge     = parseInt(document.getElementById('ret-age').value) || 65;
-    const salary     = parseFloat(document.getElementById('salary').value) || 75000;
-    const current    = parseFloat(document.getElementById('current-savings').value) || 0;
-    const contribPct = parseInt(document.getElementById('contrib').value) / 100;
-    const matchPct   = parseInt(document.getElementById('match').value) / 100;
-    const annReturn  = parseInt(document.getElementById('ret-return').value) / 100;
-
-    if (retAge <= age) { alert('Retirement age must be greater than current age.'); return; }
-
-    const years = retAge - age;
-    const monthlyRate = annReturn / 12;
-    const months = years * 12;
-    const monthlyContrib = (salary * contribPct) / 12;
-    const monthlyMatch   = (salary * Math.min(matchPct, contribPct)) / 12;
-    const totalMonthly   = monthlyContrib + monthlyMatch;
-
-    // FV of current savings + FV of monthly contributions
-    const fvCurrent = current * Math.pow(1 + annReturn, years);
-    const fvContrib = totalMonthly * ((Math.pow(1 + monthlyRate, months) - 1) / monthlyRate);
-    const nestEgg = fvCurrent + fvContrib;
-
-    const totalContrib = monthlyContrib * months;
-    const totalMatch   = monthlyMatch * months;
-    const growth = nestEgg - current - totalContrib - totalMatch;
-    const monthlyIncome = nestEgg * 0.04 / 12; // 4% safe withdrawal rule
-
-    // Rule of thumb: need 25x annual expenses; assume 80% of salary
-    const target = salary * 0.8 * 25;
-    const onTrack = nestEgg >= target;
-
-    document.getElementById('nest-egg').textContent = fmt(nestEgg);
-    document.getElementById('track-msg').innerHTML = onTrack
-      ? `<div class="on-track">✅ On track! Your savings exceed the recommended ${fmt(target)} target.</div>`
-      : `<div class="off-track">⚠️ You may fall short of the recommended ${fmt(target)} target. Consider increasing contributions.</div>`;
-
-    document.getElementById('r-years').textContent = years + ' years';
-    document.getElementById('r-monthly-contrib').textContent = fmt(monthlyContrib);
-    document.getElementById('r-total-contrib').textContent = fmt(totalContrib);
-    document.getElementById('r-growth').textContent = fmt(growth);
-    document.getElementById('r-monthly-income').textContent = fmt(monthlyIncome) + '/mo';
-    document.getElementById('r-employer').textContent = fmt(totalMatch);
-
-    const barPct = Math.min(nestEgg / 1000000 * 100, 100);
-    document.getElementById('p-target').textContent = fmt(nestEgg);
-    requestAnimationFrame(() => { document.getElementById('p-bar').style.width = barPct + '%'; });
-
-    const r = document.getElementById('result');
-    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
-  }
+const C={
+  US:{flag:'🇺🇸',name:'United States',sym:'$',em:.03,cl:'401k contribution',el:'Employer match (3%)'},
+  UK:{flag:'🇬🇧',name:'United Kingdom',sym:'£',em:.03,cl:'Employee contribution',el:'Employer contribution (3%)'},
+  CA:{flag:'🇨🇦',name:'Canada',sym:'CA$',em:0,cl:'RRSP contribution',el:'Employer DPSP'},
+  AU:{flag:'🇦🇺',name:'Australia',sym:'A$',em:.11,cl:'Voluntary contribution',el:'Super guarantee (11%)'},
+  DE:{flag:'🇩🇪',name:'Germany',sym:'€',em:.02,cl:'Employee contribution',el:'Employer contribution'},
+  FR:{flag:'🇫🇷',name:'France',sym:'€',em:.02,cl:'Employee contribution',el:'Employer contribution'},
+  JP:{flag:'🇯🇵',name:'Japan',sym:'¥',em:0,cl:'iDeCo contribution',el:'Employer DB'},
+  CN:{flag:'🇨🇳',name:'China',sym:'¥',em:.08,cl:'Employee contribution',el:'Employer contribution (8%)'},
+};
+let _c='US';
+function bg(){document.getElementById('cg').innerHTML=Object.entries(C).map(([k,v])=>`<div class="cb${k===_c?' active':''}" onclick="sc('${k}')">${v.flag}<br>${v.name.split(' ')[0]}</div>`).join('');}
+function sc(k){_c=k;bg();document.getElementById('l2').textContent=C[k].cl;document.getElementById('l6').textContent=C[k].el;document.getElementById('result').classList.remove('show');}
+function f(n,s){return s+Math.round(n).toLocaleString();}
+function calc(){
+  const age=+document.getElementById('age').value||30,ra=+document.getElementById('ra').value||65;
+  const sal=+document.getElementById('sal').value||75000,sav=+document.getElementById('sav').value||0;
+  const cp=+document.getElementById('cr').value/100,ar=+document.getElementById('rr').value/100;
+  if(ra<=age){alert('Retirement age must be greater than current age.');return;}
+  const c=C[_c],y=ra-age,mr=ar/12,m=y*12,mc=(sal*cp)/12,mm=(sal*c.em)/12;
+  const fv=sav*Math.pow(1+ar,y)+(mc+mm)*((Math.pow(1+mr,m)-1)/mr);
+  const tc=mc*m,tm=mm*m,g=fv-sav-tc-tm,tgt=sal*.8*25,s=c.sym;
+  document.getElementById('ne').textContent=f(fv,s);
+  document.getElementById('tm').innerHTML=fv>=tgt?`<div class="ot">✅ On track! Projected savings exceed ${f(tgt,s)}.</div>`:`<div class="ft">⚠️ May fall short of ${f(tgt,s)}. Consider increasing contributions.</div>`;
+  document.getElementById('r1').textContent=y+' years';
+  document.getElementById('r2').textContent=f(mc,s);
+  document.getElementById('r3').textContent=f(tc,s);
+  document.getElementById('r4').textContent=f(g,s);
+  document.getElementById('r5').textContent=f(fv*.04/12,s)+'/mo';
+  document.getElementById('r6').textContent=f(tm,s);
+  requestAnimationFrame(()=>{document.getElementById('pb').style.width=Math.min(fv/1e6*100,100).toFixed(1)+'%';});
+  const r=document.getElementById('result');r.classList.remove('show');void r.offsetWidth;r.classList.add('show');
+}
+bg();sc('US');
 </script>
-
 <!-- Cookie Consent Banner -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
-  background:#1e293b;color:#e2e8f0;padding:16px 20px;
-  box-shadow:0 -4px 20px rgba(0,0,0,.2)">
-  <div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">
-      🍪 We use cookies to analyze site traffic and improve your experience.
-      See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.
-    </div>
-    <div style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);
-        color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">
-        Accept All
-      </button>
-      <button onclick="declineCookies()" style="padding:8px 18px;background:transparent;
-        color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">
-        Decline
-      </button>
-    </div>
-  </div>
-</div>
-<script>
-  (function() {
-    var consent = localStorage.getItem('cookie_consent');
-    if (!consent) document.getElementById('cookie-banner').style.display = 'block';
-  })();
-  function acceptCookies() {
-    localStorage.setItem('cookie_consent', 'accepted');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-  function declineCookies() {
-    localStorage.setItem('cookie_consent', 'declined');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-</script>
-
-<!-- Footer -->
-<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;
-  border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2">
-  <div style="margin-bottom:8px">
-    <a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a>
-    <a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a>
-    <a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a>
-  </div>
-  <div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div>
-  <div style="margin-top:4px">All results are estimates for informational purposes only.</div>
-</footer>
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1e293b;color:#e2e8f0;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.2)"><div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">🍪 We use cookies to analyze site traffic. See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.</div><div style="display:flex;gap:8px;flex-shrink:0"><button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Accept All</button><button onclick="declineCookies()" style="padding:8px 18px;background:transparent;color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">Decline</button></div></div></div>
+<script>(function(){var c=localStorage.getItem('cookie_consent');if(!c)document.getElementById('cookie-banner').style.display='block';})();function acceptCookies(){localStorage.setItem('cookie_consent','accepted');document.getElementById('cookie-banner').style.display='none';}function declineCookies(){localStorage.setItem('cookie_consent','declined');document.getElementById('cookie-banner').style.display='none';}</script>
+<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2"><div style="margin-bottom:8px"><a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a><a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a><a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a></div><div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div><div style="margin-top:4px">All results are estimates for informational purposes only.</div></footer>
 </body>
 </html>

@@ -1,227 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loan Calculator – Monthly Payment & Amortization</title>
-  <meta name="description" content="Free loan calculator. Calculate monthly payments, total interest, and see a full amortization schedule for any loan — mortgage, auto, personal, or student loan.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏦</text></svg>">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    input[type="number"],input[type="range"] { width:100%; }
-    input[type="number"] { padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px;
-      font-size:16px; outline:none; background:#f8fafc; transition:border-color .2s; }
-    input[type="number"]:focus { border-color:#6366f1; background:#fff; }
-    input[type="range"] { accent-color:#6366f1; margin-top:6px; }
-    .range-val { font-size:13px; font-weight:700; color:#6366f1; }
-    .loan-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
-    .loan-item { background:#f5f3ff; border-radius:10px; padding:14px; border-left:3px solid #8b5cf6; }
-    .loan-val { font-size:1.15rem; font-weight:700; color:#4f46e5; }
-    .loan-lbl { font-size:12px; color:#64748b; margin-top:3px; }
-    .big-payment { text-align:center; padding:16px 0 8px; }
-    .big-num { font-size:clamp(2rem,8vw,3rem); font-weight:800;
-               background:linear-gradient(135deg,#6366f1,#8b5cf6);
-               -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .big-lbl { font-size:13px; color:#64748b; margin-top:4px; }
-    .pie-wrap { display:flex; align-items:center; gap:20px; margin:16px 0; }
-    .pie { position:relative; width:100px; height:100px; flex-shrink:0; }
-    .pie svg { transform:rotate(-90deg); }
-    .pie-legend { font-size:13px; color:#475569; line-height:2; }
-    .pie-legend span { font-weight:700; }
-    .amort-toggle { font-size:13px; color:#6366f1; font-weight:600; cursor:pointer; margin-bottom:10px; display:inline-block; }
-    .amort-table { display:none; overflow-x:auto; }
-    .amort-table.show { display:block; }
-    table { width:100%; border-collapse:collapse; font-size:12px; }
-    th { background:#f5f3ff; color:#4f46e5; padding:8px; text-align:right; font-weight:700; }
-    th:first-child { text-align:left; }
-    td { padding:7px 8px; border-bottom:1px solid #f1f5f9; text-align:right; color:#475569; }
-    td:first-child { text-align:left; font-weight:600; color:#1e293b; }
-    tr:hover td { background:#fafafa; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Loan Calculator – US, UK, Canada, Australia, Germany &amp; More</title>
+<meta name="description" content="Free loan calculator for US, UK, Canada, Australia, Germany, France, Japan and China. Calculate monthly payments, total interest and amortization for any loan.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏦</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<style>
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+@media(max-width:480px){.cg{grid-template-columns:repeat(3,1fr)}}
+.cb{padding:8px 4px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;text-align:center;transition:all .2s}
+.cb.active{border-color:#6366f1;color:#6366f1;background:#ede9fe}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.ri{background:#f5f3ff;border-radius:10px;padding:14px;border-left:3px solid #8b5cf6}
+.rv{font-size:1.1rem;font-weight:700;color:#4f46e5}
+.rl{font-size:12px;color:#64748b;margin-top:3px}
+input[type=number]{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;outline:none;background:#f8fafc;transition:border-color .2s}
+input[type=number]:focus{border-color:#6366f1;background:#fff}
+input[type=range]{width:100%;accent-color:#6366f1;margin-top:6px}
+.range-val{font-size:13px;font-weight:700;color:#6366f1}
+.big-payment{text-align:center;padding:20px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border-radius:14px;color:#fff;margin-bottom:16px}
+.big-num{font-size:clamp(2rem,8vw,3rem);font-weight:800}
+.big-lbl{font-size:13px;opacity:.85;margin-top:4px}
+.amort-toggle{font-size:13px;color:#6366f1;font-weight:600;cursor:pointer;margin-bottom:10px;display:inline-block;background:none;border:1px solid #c7d2fe;border-radius:8px;padding:7px 14px}
+.amort-table{display:none;overflow-x:auto}
+.amort-table.show{display:block}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#f5f3ff;color:#4f46e5;padding:8px;text-align:right;font-weight:700}
+th:first-child{text-align:left}
+td{padding:7px 8px;border-bottom:1px solid #f1f5f9;text-align:right;color:#475569}
+td:first-child{text-align:left;font-weight:600;color:#1e293b}
+</style>
 </head>
 <body>
 <div class="page">
-  <nav class="nav" style="flex-wrap:wrap">
-    <a href="index.html">🎂 Age</a>
-    <a href="age-difference.html">↔ Difference</a>
-    <a href="birthday-countdown.html">⏳ Countdown</a>
-    <a href="date-calculator.html">📅 Date Calc</a>
-    <a href="day-of-week.html">📆 Day of Week</a>
-    <a href="life-progress.html">🌱 Life Progress</a>
-    <a href="tax-calculator.html">💰 Tax</a>
-    <a href="retirement-calculator.html">🏖️ Retirement</a>
-    <a href="loan-calculator.html" class="active">🏦 Loan</a>
-    <a href="college-cost-calculator.html">🎓 College</a>
-    <a href="currency-converter.html">💱 Currency</a>
-    <a href="pension-calculator.html">👴 Pension</a>
-  </nav>
+<nav class="nav" style="flex-wrap:wrap">
+<a href="index.html">🎂 Age</a><a href="age-difference.html">↔ Difference</a><a href="birthday-countdown.html">⏳ Countdown</a><a href="date-calculator.html">📅 Date Calc</a><a href="day-of-week.html">📆 Day of Week</a><a href="life-progress.html">🌱 Life Progress</a><a href="tax-calculator.html">💰 Tax</a><a href="retirement-calculator.html">🏖️ Retirement</a><a href="loan-calculator.html" class="active">🏦 Loan</a><a href="college-cost-calculator.html">🎓 College</a><a href="currency-converter.html">💱 Currency</a><a href="pension-calculator.html">👴 Pension</a>
+</nav>
 
-  <div class="badge">Mortgage · Auto · Personal</div>
-  <h1>Loan Calculator</h1>
-  <p class="subtitle">Monthly payment, total interest & amortization schedule</p>
-  <p class="trust">Free • Instant • No Sign Up</p>
+<div class="badge">Mortgage · Auto · Personal</div>
+<h1>Loan Calculator</h1>
+<p class="subtitle">Monthly payment, total interest &amp; amortization schedule</p>
+<p class="trust">Free • Multi-Country • No Sign Up</p>
 
-  <div class="card">
-    <div class="two-col">
-      <div class="field">
-        <label for="principal">Loan Amount ($)</label>
-        <input type="number" id="principal" placeholder="300000" min="0" value="300000">
-      </div>
-      <div class="field">
-        <label for="term">Loan Term (years)</label>
-        <input type="number" id="term" placeholder="30" min="1" max="50" value="30">
-      </div>
-    </div>
-    <div class="field">
-      <label>Annual Interest Rate: <span class="range-val" id="rate-val">6.5%</span></label>
-      <input type="range" id="rate" min="0.5" max="20" step="0.1" value="6.5"
-        oninput="document.getElementById('rate-val').textContent=parseFloat(this.value).toFixed(1)+'%'">
-    </div>
-    <button class="btn" onclick="calculate()">Calculate Payment</button>
+<div class="card">
+  <label class="label" style="font-size:13px;font-weight:600;color:#475569;display:block;margin-bottom:8px">Select Country</label>
+  <div class="cg" id="countryGrid"></div>
+
+  <div class="field">
+    <label for="principal">Loan Amount (<span id="symLabel">$</span>)</label>
+    <input type="number" id="principal" value="300000" min="1000">
   </div>
-
-  <div class="card result" id="result">
-    <div class="big-payment">
-      <div class="big-num" id="monthly-pay"></div>
-      <div class="big-lbl">Monthly Payment</div>
-    </div>
-    <div class="loan-grid">
-      <div class="loan-item"><div class="loan-val" id="l-principal"></div><div class="loan-lbl">Loan Principal</div></div>
-      <div class="loan-item"><div class="loan-val" id="l-interest"></div><div class="loan-lbl">Total Interest</div></div>
-      <div class="loan-item"><div class="loan-val" id="l-total"></div><div class="loan-lbl">Total Cost</div></div>
-      <div class="loan-item"><div class="loan-val" id="l-ratio"></div><div class="loan-lbl">Interest / Principal</div></div>
-    </div>
-    <div class="pie-wrap">
-      <div class="pie">
-        <svg width="100" height="100" viewBox="0 0 36 36">
-          <circle cx="18" cy="18" r="15.9" fill="none" stroke="#e2e8f0" stroke-width="3.8"/>
-          <circle id="pie-arc" cx="18" cy="18" r="15.9" fill="none" stroke="#6366f1" stroke-width="3.8"
-            stroke-dasharray="0 100" stroke-linecap="round"/>
-        </svg>
-      </div>
-      <div class="pie-legend" id="pie-legend"></div>
-    </div>
-    <div class="amort-toggle" onclick="toggleAmort()">📋 Show Amortization Schedule ▼</div>
-    <div class="amort-table" id="amort-table"></div>
+  <div class="field">
+    <label for="term">Loan Term (Years)</label>
+    <input type="number" id="term" value="30" min="1" max="50">
   </div>
-
-  <div class="seo">
-    <h2>About This Loan Calculator</h2>
-    <p>Use this free loan calculator to find your monthly payment for any loan — mortgage, auto, personal, or student loan. Enter the loan amount, interest rate, and term to instantly see your payment, total interest paid, and a full year-by-year amortization schedule.</p>
+  <div class="field">
+    <label>Annual Interest Rate: <span class="range-val" id="rate-val">6.5%</span></label>
+    <input type="range" id="rate" min="0.5" max="20" step="0.1" value="6.5"
+      oninput="document.getElementById('rate-val').textContent=parseFloat(this.value).toFixed(1)+'%'">
   </div>
+  <button class="btn" onclick="calculate()">Calculate Payment</button>
 </div>
-<script>
-  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
 
-  function calculate() {
-    const P = parseFloat(document.getElementById('principal').value) || 0;
-    const years = parseInt(document.getElementById('term').value) || 30;
-    const annRate = parseFloat(document.getElementById('rate').value) / 100;
+<div class="card result" id="result">
+  <div class="big-payment">
+    <div class="big-num" id="monthly-pay"></div>
+    <div class="big-lbl">Monthly Payment</div>
+  </div>
+  <div class="rg">
+    <div class="ri"><div class="rv" id="l-principal"></div><div class="rl">Principal</div></div>
+    <div class="ri"><div class="rv" id="l-interest"></div><div class="rl">Total Interest</div></div>
+    <div class="ri"><div class="rv" id="l-total"></div><div class="rl">Total Cost</div></div>
+    <div class="ri"><div class="rv" id="l-ratio"></div><div class="rl">Interest / Principal</div></div>
+  </div>
+  <button class="amort-toggle" onclick="toggleAmort()">📋 Show Amortization Schedule ▼</button>
+  <div class="amort-table" id="amort-table"></div>
+</div>
 
-    if (P <= 0) { alert('Please enter a loan amount.'); return; }
-
-    const n = years * 12;
-    const r = annRate / 12;
-    const monthly = r === 0 ? P / n : P * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1);
-    const totalCost = monthly * n;
-    const totalInterest = totalCost - P;
-    const ratio = ((totalInterest / P) * 100).toFixed(0) + '%';
-
-    document.getElementById('monthly-pay').textContent = fmt(monthly);
-    document.getElementById('l-principal').textContent = fmt(P);
-    document.getElementById('l-interest').textContent = fmt(totalInterest);
-    document.getElementById('l-total').textContent = fmt(totalCost);
-    document.getElementById('l-ratio').textContent = ratio;
-
-    // Pie chart (principal %)
-    const principalPct = (P / totalCost * 100).toFixed(1);
-    const interestPct  = (100 - principalPct).toFixed(1);
-    const circ = 100; // stroke-dasharray base
-    const dash = (P / totalCost * circ).toFixed(1);
-    document.getElementById('pie-arc').setAttribute('stroke-dasharray', `${dash} ${circ}`);
-    document.getElementById('pie-legend').innerHTML =
-      `<span style="color:#6366f1">■</span> Principal: <span>${principalPct}%</span><br>` +
-      `<span style="color:#e2e8f0">■</span> Interest: <span>${interestPct}%</span>`;
-
-    // Build amortization table (yearly summary)
-    let balance = P, rows = '';
-    for (let y = 1; y <= years; y++) {
-      let yearPrincipal = 0, yearInterest = 0;
-      for (let m = 0; m < 12; m++) {
-        const intPmt = balance * r;
-        const prinPmt = monthly - intPmt;
-        yearInterest += intPmt;
-        yearPrincipal += prinPmt;
-        balance -= prinPmt;
-      }
-      rows += `<tr><td>Year ${y}</td><td>${fmt(monthly)}</td><td>${fmt(yearPrincipal)}</td><td>${fmt(yearInterest)}</td><td>${fmt(Math.max(balance,0))}</td></tr>`;
-    }
-    document.getElementById('amort-table').innerHTML =
-      `<table><thead><tr><th>Period</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead><tbody>${rows}</tbody></table>`;
-
-    const el = document.getElementById('amort-table');
-    el.classList.remove('show');
-
-    const r2 = document.getElementById('result');
-    r2.classList.remove('show'); void r2.offsetWidth; r2.classList.add('show');
-  }
-
-  function toggleAmort() {
-    const t = document.getElementById('amort-table');
-    const btn = document.querySelector('.amort-toggle');
-    t.classList.toggle('show');
-    btn.textContent = t.classList.contains('show')
-      ? '📋 Hide Amortization Schedule ▲'
-      : '📋 Show Amortization Schedule ▼';
-  }
-</script>
+<div class="seo">
+  <h2>About This Loan Calculator</h2>
+  <p>Free loan calculator supporting US, UK, Canada, Australia, Germany, France, Japan and China. Enter the loan amount, interest rate, and term to instantly see your monthly payment, total interest, and a full year-by-year amortization schedule.</p>
+</div>
+</div>
 
 <!-- Cookie Consent Banner -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
-  background:#1e293b;color:#e2e8f0;padding:16px 20px;
-  box-shadow:0 -4px 20px rgba(0,0,0,.2)">
-  <div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">
-      🍪 We use cookies to analyze site traffic and improve your experience.
-      See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.
-    </div>
-    <div style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);
-        color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">
-        Accept All
-      </button>
-      <button onclick="declineCookies()" style="padding:8px 18px;background:transparent;
-        color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">
-        Decline
-      </button>
-    </div>
-  </div>
-</div>
-<script>
-  (function() {
-    var consent = localStorage.getItem('cookie_consent');
-    if (!consent) document.getElementById('cookie-banner').style.display = 'block';
-  })();
-  function acceptCookies() {
-    localStorage.setItem('cookie_consent', 'accepted');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-  function declineCookies() {
-    localStorage.setItem('cookie_consent', 'declined');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-</script>
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1e293b;color:#e2e8f0;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.2)"><div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">🍪 We use cookies to analyze site traffic. See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.</div><div style="display:flex;gap:8px;flex-shrink:0"><button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Accept All</button><button onclick="declineCookies()" style="padding:8px 18px;background:transparent;color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">Decline</button></div></div></div>
+<script>(function(){var c=localStorage.getItem('cookie_consent');if(!c)document.getElementById('cookie-banner').style.display='block';})();function acceptCookies(){localStorage.setItem('cookie_consent','accepted');document.getElementById('cookie-banner').style.display='none';}function declineCookies(){localStorage.setItem('cookie_consent','declined');document.getElementById('cookie-banner').style.display='none';}</script>
+<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2"><div style="margin-bottom:8px"><a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a><a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a><a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a></div><div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div><div style="margin-top:4px">All results are estimates for informational purposes only.</div></footer>
 
-<!-- Footer -->
-<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;
-  border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2">
-  <div style="margin-bottom:8px">
-    <a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a>
-    <a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a>
-    <a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a>
-  </div>
-  <div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div>
-  <div style="margin-top:4px">All results are estimates for informational purposes only.</div>
-</footer>
+<script>
+const COUNTRIES = [
+  {code:'US',flag:'🇺🇸',label:'US',sym:'$',rate:6.5},
+  {code:'UK',flag:'🇬🇧',label:'UK',sym:'£',rate:5.5},
+  {code:'CA',flag:'🇨🇦',label:'CA',sym:'CA$',rate:5.8},
+  {code:'AU',flag:'🇦🇺',label:'AU',sym:'A$',rate:6.2},
+  {code:'DE',flag:'🇩🇪',label:'DE',sym:'€',rate:4.0},
+  {code:'FR',flag:'🇫🇷',label:'FR',sym:'€',rate:4.2},
+  {code:'JP',flag:'🇯🇵',label:'JP',sym:'¥',rate:1.5},
+  {code:'CN',flag:'🇨🇳',label:'CN',sym:'¥',rate:4.2}
+];
+let activeSym = '$';
+
+(function buildGrid(){
+  const g = document.getElementById('countryGrid');
+  COUNTRIES.forEach((c,i) => {
+    const b = document.createElement('button');
+    b.className = 'cb' + (i===0?' active':'');
+    b.innerHTML = c.flag + '<br>' + c.label;
+    b.onclick = () => {
+      document.querySelectorAll('.cb').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      activeSym = c.sym;
+      document.getElementById('symLabel').textContent = c.sym;
+      const sl = document.getElementById('rate');
+      sl.value = c.rate;
+      document.getElementById('rate-val').textContent = c.rate.toFixed(1) + '%';
+    };
+    g.appendChild(b);
+  });
+})();
+
+function fmt(n) {
+  if (activeSym === '¥') return activeSym + Math.round(n).toLocaleString();
+  return activeSym + n.toLocaleString('en',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+
+function calculate() {
+  const P = parseFloat(document.getElementById('principal').value) || 0;
+  const years = parseInt(document.getElementById('term').value) || 0;
+  const annRate = parseFloat(document.getElementById('rate').value) / 100;
+  if (P <= 0 || years <= 0) { alert('Please enter valid loan amount and term.'); return; }
+  const n = years * 12, r = annRate / 12;
+  const monthly = r === 0 ? P/n : P*(r*Math.pow(1+r,n))/(Math.pow(1+r,n)-1);
+  const totalCost = monthly * n;
+  const totalInterest = totalCost - P;
+
+  document.getElementById('monthly-pay').textContent = fmt(monthly);
+  document.getElementById('l-principal').textContent = fmt(P);
+  document.getElementById('l-interest').textContent = fmt(totalInterest);
+  document.getElementById('l-total').textContent = fmt(totalCost);
+  document.getElementById('l-ratio').textContent = (totalInterest/P*100).toFixed(0) + '%';
+
+  let balance = P, rows = '';
+  for (let y = 1; y <= years; y++) {
+    let yPrin = 0, yInt = 0;
+    for (let m = 0; m < 12; m++) {
+      const ip = balance * r, pp = monthly - ip;
+      yInt += ip; yPrin += pp; balance -= pp;
+    }
+    rows += `<tr><td>Year ${y}</td><td>${fmt(monthly)}</td><td>${fmt(yPrin)}</td><td>${fmt(yInt)}</td><td>${fmt(Math.max(balance,0))}</td></tr>`;
+  }
+  document.getElementById('amort-table').innerHTML =
+    `<table><thead><tr><th>Period</th><th>Payment</th><th>Principal</th><th>Interest</th><th>Balance</th></tr></thead><tbody>${rows}</tbody></table>`;
+  document.getElementById('amort-table').classList.remove('show');
+
+  const el = document.getElementById('result');
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+}
+
+function toggleAmort() {
+  const t = document.getElementById('amort-table');
+  const btn = document.querySelector('.amort-toggle');
+  t.classList.toggle('show');
+  btn.textContent = t.classList.contains('show') ? '📋 Hide Amortization Schedule ▲' : '📋 Show Amortization Schedule ▼';
+}
+</script>
 </body>
 </html>

@@ -1,250 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Social Security & Pension Calculator – Retirement Income Estimator</title>
-  <meta name="description" content="Free Social Security and pension calculator. Estimate your monthly Social Security benefit based on your earnings history and retirement age. US-focused, no sign-up.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👴</text></svg>">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    input[type="number"],input[type="range"],select { width:100%; }
-    input[type="number"],select { padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px;
-      font-size:16px; outline:none; background:#f8fafc; transition:border-color .2s; }
-    input[type="number"]:focus,select:focus { border-color:#6366f1; background:#fff; }
-    input[type="range"] { accent-color:#6366f1; margin-top:6px; }
-    .range-val { font-size:13px; font-weight:700; color:#6366f1; }
-    .pen-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
-    .pen-item { background:#f5f3ff; border-radius:10px; padding:14px; border-left:3px solid #8b5cf6; }
-    .pen-val { font-size:1.1rem; font-weight:700; color:#4f46e5; }
-    .pen-lbl { font-size:12px; color:#64748b; margin-top:3px; }
-    .age-options { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
-    .age-opt { padding:12px 6px; border:2px solid #e2e8f0; border-radius:10px; background:#fff;
-               font-size:12px; font-weight:600; color:#64748b; cursor:pointer; text-align:center; transition:all .2s; }
-    .age-opt.active { border-color:#6366f1; color:#6366f1; background:#ede9fe; }
-    .age-opt small { display:block; font-weight:400; color:#94a3b8; margin-top:2px; }
-    .big-benefit { text-align:center; padding:16px 0 8px; }
-    .big-num { font-size:clamp(2rem,8vw,3rem); font-weight:800;
-               background:linear-gradient(135deg,#6366f1,#8b5cf6);
-               -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .comparison { margin-top:16px; }
-    .comp-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:13px; }
-    .comp-bar-wrap { flex:1; background:#e2e8f0; border-radius:99px; height:10px; overflow:hidden; }
-    .comp-bar { height:100%; border-radius:99px; transition:width .6s ease; }
-    .comp-label { width:80px; color:#64748b; }
-    .comp-amt { width:80px; text-align:right; font-weight:700; color:#4f46e5; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Pension &amp; Social Security Calculator – US, UK, Canada, Australia &amp; More</title>
+<meta name="description" content="Free pension calculator for US Social Security, UK State Pension, Canada CPP, Australia Age Pension and more. Estimate your monthly retirement benefit.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>👴</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<style>
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+@media(max-width:480px){.cg{grid-template-columns:repeat(3,1fr)}}
+.cb{padding:8px 4px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;text-align:center;transition:all .2s}
+.cb.active{border-color:#6366f1;color:#6366f1;background:#ede9fe}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.ri{background:#f5f3ff;border-radius:10px;padding:14px;border-left:3px solid #8b5cf6}
+.rv{font-size:1.1rem;font-weight:700;color:#4f46e5}
+.rl{font-size:12px;color:#64748b;margin-top:3px}
+input[type=number]{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;outline:none;background:#f8fafc;transition:border-color .2s}
+input[type=number]:focus{border-color:#6366f1;background:#fff}
+input[type=range]{width:100%;accent-color:#6366f1;margin-top:6px}
+.range-val{font-size:13px;font-weight:700;color:#6366f1}
+.age-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.age-opt{padding:12px 6px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;text-align:center;transition:all .2s}
+.age-opt.active{border-color:#6366f1;color:#6366f1;background:#ede9fe}
+.age-opt small{display:block;font-weight:400;color:#94a3b8;margin-top:2px}
+.big-benefit{text-align:center;padding:16px 0 8px}
+.big-num{font-size:clamp(2rem,8vw,3rem);font-weight:800;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.comp-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+.comp-bar-wrap{flex:1;background:#e2e8f0;border-radius:99px;height:10px;overflow:hidden}
+.comp-bar{height:100%;border-radius:99px;transition:width .6s ease}
+.comp-label{width:80px;color:#64748b}
+.comp-amt{width:90px;text-align:right;font-weight:700;color:#4f46e5}
+</style>
 </head>
 <body>
 <div class="page">
-  <nav class="nav" style="flex-wrap:wrap">
-    <a href="index.html">🎂 Age</a>
-    <a href="age-difference.html">↔ Difference</a>
-    <a href="birthday-countdown.html">⏳ Countdown</a>
-    <a href="date-calculator.html">📅 Date Calc</a>
-    <a href="day-of-week.html">📆 Day of Week</a>
-    <a href="life-progress.html">🌱 Life Progress</a>
-    <a href="tax-calculator.html">💰 Tax</a>
-    <a href="retirement-calculator.html">🏖️ Retirement</a>
-    <a href="loan-calculator.html">🏦 Loan</a>
-    <a href="college-cost-calculator.html">🎓 College</a>
-    <a href="currency-converter.html">💱 Currency</a>
-    <a href="pension-calculator.html" class="active">👴 Pension</a>
-  </nav>
+<nav class="nav" style="flex-wrap:wrap">
+<a href="index.html">🎂 Age</a><a href="age-difference.html">↔ Difference</a><a href="birthday-countdown.html">⏳ Countdown</a><a href="date-calculator.html">📅 Date Calc</a><a href="day-of-week.html">📆 Day of Week</a><a href="life-progress.html">🌱 Life Progress</a><a href="tax-calculator.html">💰 Tax</a><a href="retirement-calculator.html">🏖️ Retirement</a><a href="loan-calculator.html">🏦 Loan</a><a href="college-cost-calculator.html">🎓 College</a><a href="currency-converter.html">💱 Currency</a><a href="pension-calculator.html" class="active">👴 Pension</a>
+</nav>
 
-  <div class="badge">US Social Security</div>
-  <h1>Social Security & Pension Calculator</h1>
-  <p class="subtitle">Estimate your monthly Social Security benefit at retirement</p>
-  <p class="trust">Free • SSA Formula • No Sign Up</p>
+<div class="badge">SS · State Pension · CPP · Age Pension</div>
+<h1>Pension &amp; Social Security Calculator</h1>
+<p class="subtitle">Estimate your monthly retirement benefit by country</p>
+<p class="trust">Free • Multi-Country • No Sign Up</p>
 
-  <div class="card">
-    <div class="two-col">
-      <div class="field">
-        <label for="cur-age">Current Age</label>
-        <input type="number" id="cur-age" value="45" min="22" max="70">
-      </div>
-      <div class="field">
-        <label for="work-years">Years Worked So Far</label>
-        <input type="number" id="work-years" value="20" min="0" max="45">
-      </div>
+<div class="card">
+  <label class="label" style="font-size:13px;font-weight:600;color:#475569;display:block;margin-bottom:8px">Select Country</label>
+  <div class="cg" id="countryGrid"></div>
+
+  <div class="two-col">
+    <div class="field">
+      <label for="cur-age">Current Age</label>
+      <input type="number" id="cur-age" value="45" min="18" max="69">
     </div>
     <div class="field">
-      <label>Average Annual Earnings: <span class="range-val" id="earn-val">$65,000</span></label>
-      <input type="range" id="earnings" min="10000" max="200000" step="1000" value="65000"
-        oninput="document.getElementById('earn-val').textContent='$'+parseInt(this.value).toLocaleString()">
+      <label for="work-years">Years Worked</label>
+      <input type="number" id="work-years" value="20" min="0" max="50">
     </div>
-    <div class="field">
-      <label>Claim Age</label>
-      <div class="age-options">
-        <div class="age-opt" onclick="selectAge(this,62)">Age 62<small>Early (reduced)</small></div>
-        <div class="age-opt active" onclick="selectAge(this,67)">Age 67<small>Full retirement</small></div>
-        <div class="age-opt" onclick="selectAge(this,70)">Age 70<small>Maximum benefit</small></div>
-      </div>
-    </div>
-    <button class="btn" onclick="calculate()">Estimate My Benefit</button>
   </div>
-
-  <div class="card result" id="result">
-    <div class="big-benefit">
-      <div class="big-num" id="monthly-benefit"></div>
-      <div style="font-size:13px;color:#64748b;margin-top:4px" id="benefit-sub"></div>
-    </div>
-    <div class="pen-grid">
-      <div class="pen-item"><div class="pen-val" id="p-annual"></div><div class="pen-lbl">Annual benefit</div></div>
-      <div class="pen-item"><div class="pen-val" id="p-lifetime"></div><div class="pen-lbl">Lifetime benefit (to 85)</div></div>
-      <div class="pen-item"><div class="pen-val" id="p-fra"></div><div class="pen-lbl">Full Retirement Age benefit</div></div>
-      <div class="pen-item"><div class="pen-val" id="p-breakeven"></div><div class="pen-lbl">Break-even vs age 62</div></div>
-    </div>
-    <div class="comparison">
-      <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:10px">Benefit by Claim Age</div>
-      <div id="comp-bars"></div>
-    </div>
-    <div style="font-size:11px;color:#94a3b8;margin-top:12px">⚠️ Estimate only. Actual benefits depend on your full earnings history. Visit ssa.gov for your official estimate.</div>
+  <div class="field">
+    <label>Average Annual Earnings: <span class="range-val" id="earn-val">$65,000</span></label>
+    <input type="range" id="earnings" min="10000" max="200000" step="1000" value="65000"
+      oninput="updateEarnLabel(this.value)">
   </div>
-
-  <div class="seo">
-    <h2>About This Social Security Calculator</h2>
-    <p>This free Social Security calculator estimates your monthly retirement benefit using the SSA's bend-point formula. Enter your average earnings and choose when to claim — at 62 (reduced), 67 (full retirement age), or 70 (maximum). See how your claiming age dramatically affects your lifetime benefit.</p>
+  <div class="field">
+    <label>Claim Age</label>
+    <div class="age-opts" id="ageOpts"></div>
   </div>
+  <button class="btn" onclick="calculate()">Estimate My Benefit</button>
 </div>
-<script>
-  let _claimAge = 67;
 
-  function selectAge(el, age) {
-    document.querySelectorAll('.age-opt').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    _claimAge = age;
-  }
+<div class="card result" id="result">
+  <div class="big-benefit">
+    <div class="big-num" id="monthly-benefit"></div>
+    <div style="font-size:13px;color:#64748b;margin-top:4px" id="benefit-sub"></div>
+  </div>
+  <div class="rg">
+    <div class="ri"><div class="rv" id="p-annual"></div><div class="rl">Annual benefit</div></div>
+    <div class="ri"><div class="rv" id="p-lifetime"></div><div class="rl">Lifetime benefit (to 85)</div></div>
+    <div class="ri"><div class="rv" id="p-fra"></div><div class="rl">Full retirement age benefit</div></div>
+    <div class="ri"><div class="rv" id="p-breakeven"></div><div class="rl">Break-even vs early claim</div></div>
+  </div>
+  <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#94a3b8;margin-bottom:10px">Benefit by Claim Age</div>
+  <div id="comp-bars"></div>
+  <div style="font-size:11px;color:#94a3b8;margin-top:12px" id="result-note"></div>
+</div>
 
-  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
-
-  function calcAIME(annualEarnings, workYears) {
-    // AIME = Average Indexed Monthly Earnings (simplified: use given earnings)
-    return (annualEarnings * Math.min(workYears, 35) / 35) / 12;
-  }
-
-  function calcPIA(aime) {
-    // 2024 SSA bend points: 90% of first $1174, 32% of $1174-$7078, 15% above $7078
-    let pia = 0;
-    if (aime <= 1174)       pia = aime * 0.90;
-    else if (aime <= 7078)  pia = 1174 * 0.90 + (aime - 1174) * 0.32;
-    else                    pia = 1174 * 0.90 + (7078 - 1174) * 0.32 + (aime - 7078) * 0.15;
-    return pia;
-  }
-
-  function adjustForAge(pia, claimAge) {
-    // FRA = 67 for born 1960+
-    if (claimAge === 67) return pia;
-    if (claimAge < 67) {
-      const monthsEarly = (67 - claimAge) * 12;
-      const reduction = monthsEarly <= 36 ? monthsEarly * (5/9/100) : 36*(5/9/100) + (monthsEarly-36)*(5/12/100);
-      return pia * (1 - reduction);
-    }
-    // Delayed credits: 8% per year after FRA
-    return pia * (1 + (claimAge - 67) * 0.08);
-  }
-
-  function calculate() {
-    const curAge   = parseInt(document.getElementById('cur-age').value) || 45;
-    const workYrs  = parseInt(document.getElementById('work-years').value) || 20;
-    const earnings = parseInt(document.getElementById('earnings').value) || 65000;
-
-    // Project remaining work years until claim age
-    const totalWorkYrs = Math.min(workYrs + Math.max(_claimAge - curAge, 0), 35);
-    const aime = calcAIME(earnings, totalWorkYrs);
-    const pia  = calcPIA(aime);
-
-    const benefit62 = adjustForAge(pia, 62);
-    const benefit67 = pia;
-    const benefit70 = adjustForAge(pia, 70);
-    const chosen    = adjustForAge(pia, _claimAge);
-
-    // Lifetime to age 85
-    const yearsCollecting = Math.max(85 - _claimAge, 0);
-    const lifetime = chosen * 12 * yearsCollecting;
-
-    // Break-even vs claiming at 62
-    const monthlyDiff = chosen - benefit62;
-    const upfrontLoss = benefit62 * 12 * (_claimAge - 62);
-    const breakEvenYrs = monthlyDiff > 0 ? Math.round(upfrontLoss / (monthlyDiff * 12)) : 0;
-    const breakEvenAge = _claimAge + breakEvenYrs;
-
-    document.getElementById('monthly-benefit').textContent = fmt(chosen) + '/mo';
-    document.getElementById('benefit-sub').textContent =
-      `Estimated benefit if you claim at age ${_claimAge}`;
-    document.getElementById('p-annual').textContent   = fmt(chosen * 12);
-    document.getElementById('p-lifetime').textContent = fmt(lifetime);
-    document.getElementById('p-fra').textContent      = fmt(benefit67) + '/mo';
-    document.getElementById('p-breakeven').textContent = _claimAge > 62
-      ? `Age ${breakEvenAge}`
-      : 'N/A (earliest)';
-
-    // Comparison bars
-    const maxB = benefit70;
-    const bars = [
-      {age:62, val:benefit62, color:'#f59e0b'},
-      {age:67, val:benefit67, color:'#6366f1'},
-      {age:70, val:benefit70, color:'#10b981'},
-    ];
-    document.getElementById('comp-bars').innerHTML = bars.map(b =>
-      `<div class="comp-row">
-        <div class="comp-label">Age ${b.age}</div>
-        <div class="comp-bar-wrap"><div class="comp-bar" style="width:${(b.val/maxB*100).toFixed(1)}%;background:${b.color}"></div></div>
-        <div class="comp-amt">${fmt(b.val)}/mo</div>
-      </div>`
-    ).join('');
-
-    const r = document.getElementById('result');
-    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
-  }
-</script>
+<div class="seo">
+  <h2>About This Pension Calculator</h2>
+  <p>Estimate retirement benefits for US Social Security, UK State Pension, Canada CPP, Australia Age Pension, Germany GRV, France Retraite, Japan Nenkin, and China Basic Pension. Enter your age, years worked, and earnings to see your estimated monthly benefit at different claim ages.</p>
+</div>
+</div>
 
 <!-- Cookie Consent Banner -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
-  background:#1e293b;color:#e2e8f0;padding:16px 20px;
-  box-shadow:0 -4px 20px rgba(0,0,0,.2)">
-  <div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">
-      🍪 We use cookies to analyze site traffic and improve your experience.
-      See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.
-    </div>
-    <div style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);
-        color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">
-        Accept All
-      </button>
-      <button onclick="declineCookies()" style="padding:8px 18px;background:transparent;
-        color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">
-        Decline
-      </button>
-    </div>
-  </div>
-</div>
-<script>
-  (function() {
-    var consent = localStorage.getItem('cookie_consent');
-    if (!consent) document.getElementById('cookie-banner').style.display = 'block';
-  })();
-  function acceptCookies() {
-    localStorage.setItem('cookie_consent', 'accepted');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-  function declineCookies() {
-    localStorage.setItem('cookie_consent', 'declined');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-</script>
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1e293b;color:#e2e8f0;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.2)"><div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">🍪 We use cookies to analyze site traffic. See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.</div><div style="display:flex;gap:8px;flex-shrink:0"><button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Accept All</button><button onclick="declineCookies()" style="padding:8px 18px;background:transparent;color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">Decline</button></div></div></div>
+<script>(function(){var c=localStorage.getItem('cookie_consent');if(!c)document.getElementById('cookie-banner').style.display='block';})();function acceptCookies(){localStorage.setItem('cookie_consent','accepted');document.getElementById('cookie-banner').style.display='none';}function declineCookies(){localStorage.setItem('cookie_consent','declined');document.getElementById('cookie-banner').style.display='none';}</script>
+<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2"><div style="margin-bottom:8px"><a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a><a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a><a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a></div><div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div><div style="margin-top:4px">All results are estimates for informational purposes only.</div></footer>
 
-<!-- Footer -->
-<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;
-  border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2">
-  <div style="margin-bottom:8px">
-    <a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a>
-    <a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a>
-    <a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a>
-  </div>
-  <div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div>
-  <div style="margin-top:4px">All results are estimates for informational purposes only.</div>
-</footer>
+<script>
+// Country definitions
+const COUNTRIES = [
+  {
+    code:'US', flag:'🇺🇸', label:'US', sym:'$',
+    fra:67, earningsMax:200000,
+    claimAges:[{age:62,label:'Age 62',sub:'Early (−30%)'},{age:67,label:'Age 67',sub:'Full retirement'},{age:70,label:'Age 70',sub:'Maximum (+24%)'}],
+    note:'Estimate only. Visit ssa.gov for your official estimate.',
+    calc(earnings, workYrs, claimAge, curAge) {
+      const totalWork = Math.min(workYrs + Math.max(claimAge - curAge, 0), 35);
+      const aime = (earnings * totalWork / 35) / 12;
+      let pia = 0;
+      if (aime <= 1174)      pia = aime * 0.90;
+      else if (aime <= 7078) pia = 1174*0.90 + (aime-1174)*0.32;
+      else                   pia = 1174*0.90 + (7078-1174)*0.32 + (aime-7078)*0.15;
+      const adjust = (age) => {
+        if (age === 67) return pia;
+        if (age < 67) {
+          const me = (67-age)*12;
+          const red = me<=36 ? me*(5/9/100) : 36*(5/9/100)+(me-36)*(5/12/100);
+          return pia*(1-red);
+        }
+        return pia*(1+(age-67)*0.08);
+      };
+      return {early:adjust(62), fra:adjust(67), max:adjust(70), chosen:adjust(claimAge)};
+    }
+  },
+  {
+    code:'UK', flag:'🇬🇧', label:'UK', sym:'£',
+    fra:67, earningsMax:100000,
+    claimAges:[{age:67,label:'Age 67',sub:'State Pension age'},{age:68,label:'Age 68',sub:'+5.8%/yr deferral'},{age:70,label:'Age 70',sub:'+17.4% total'}],
+    note:'Full new State Pension requires 35 qualifying years. Visit gov.uk for your forecast.',
+    calc(earnings, workYrs, claimAge) {
+      const fullWeekly = 221.20;
+      const fullAnnual = fullWeekly * 52;
+      const base = fullAnnual * Math.min(workYrs, 35) / 35;
+      const adjust = (age) => age <= 67 ? base : base * (1 + (age-67)*0.058);
+      return {early:adjust(67), fra:adjust(67), max:adjust(70), chosen:adjust(claimAge)};
+    }
+  },
+  {
+    code:'CA', flag:'🇨🇦', label:'CA', sym:'CA$',
+    fra:65, earningsMax:150000,
+    claimAges:[{age:60,label:'Age 60',sub:'Early (−36%)'},{age:65,label:'Age 65',sub:'Full CPP'},{age:70,label:'Age 70',sub:'Maximum (+42%)'}],
+    note:'Max CPP 2024: CA$1,364.60/mo. Visit canada.ca for your Statement of Contributions.',
+    calc(earnings, workYrs, claimAge) {
+      const maxMonthly = 1364.60;
+      const base = maxMonthly * Math.min(workYrs, 39) / 39;
+      const adjust = (age) => {
+        if (age === 65) return base;
+        if (age < 65)  return base * (1 - (65-age)*0.072);
+        return base * (1 + (age-65)*0.084);
+      };
+      return {early:adjust(60), fra:adjust(65), max:adjust(70), chosen:adjust(claimAge)};
+    }
+  },
+  {
+    code:'AU', flag:'🇦🇺', label:'AU', sym:'A$',
+    fra:67, earningsMax:200000,
+    claimAges:[{age:67,label:'Age 67',sub:'Pension age'},{age:67,label:'Age 67',sub:'(no early option)'},{age:67,label:'Age 67',sub:'Max benefit'}],
+    note:'Age Pension is means-tested. Max single rate shown. Visit servicesaustralia.gov.au.',
+    calc(earnings, workYrs, claimAge) {
+      const maxAnnual = 29754; // A$1144.40/fortnight × 26
+      const base = maxAnnual / 12;
+      return {early:base, fra:base, max:base, chosen:base};
+    }
+  },
+  {
+    code:'DE', flag:'🇩🇪', label:'DE', sym:'€',
+    fra:67, earningsMax:150000,
+    claimAges:[{age:63,label:'Age 63',sub:'Early (−14.4%)'},{age:67,label:'Age 67',sub:'Full pension'},{age:70,label:'Age 70',sub:'+9% bonus'}],
+    note:'Based on Entgeltpunkte × Rentenwert (€37.60). Avg earnings ~€45,358/yr.',
+    calc(earnings, workYrs, claimAge) {
+      const avgEarnings = 45358;
+      const pensionValue = 37.60;
+      const points = (earnings / avgEarnings) * workYrs;
+      const base = points * pensionValue;
+      const adjust = (age) => {
+        if (age === 67) return base;
+        if (age < 67)  return base * (1 - (67-age)*0.036);
+        return base * (1 + (age-67)*0.06);
+      };
+      return {early:adjust(63), fra:adjust(67), max:adjust(70), chosen:adjust(claimAge)};
+    }
+  },
+  {
+    code:'FR', flag:'🇫🇷', label:'FR', sym:'€',
+    fra:64, earningsMax:150000,
+    claimAges:[{age:62,label:'Age 62',sub:'Minimum age'},{age:64,label:'Age 64',sub:'Full retirement'},{age:67,label:'Age 67',sub:'No reduction'}],
+    note:'50% of avg best 25 years, up to SS ceiling (€46,368). Requires 172 quarters for full pension.',
+    calc(earnings, workYrs, claimAge) {
+      const ceiling = 46368;
+      const cappedEarnings = Math.min(earnings, ceiling);
+      const base = cappedEarnings * 0.50 / 12;
+      // Reduction: 1.25% per missing quarter (max 20 quarters = 25%)
+      const quartersWorked = workYrs * 4;
+      const missingQ = Math.max(172 - quartersWorked, 0);
+      const reduction = Math.min(missingQ * 0.0125, 0.25);
+      const fraBase = base * (1 - reduction);
+      const adjust = (age) => {
+        if (age >= 67) return base; // no reduction at 67+
+        if (age === 64) return fraBase;
+        if (age < 64) return fraBase * (1 - (64-age)*0.05);
+        return fraBase;
+      };
+      return {early:adjust(62), fra:adjust(64), max:adjust(67), chosen:adjust(claimAge)};
+    }
+  },
+  {
+    code:'JP', flag:'🇯🇵', label:'JP', sym:'¥',
+    fra:65, earningsMax:15000000,
+    claimAges:[{age:60,label:'Age 60',sub:'Early (−24%)'},{age:65,label:'Age 65',sub:'Full pension'},{age:70,label:'Age 70',sub:'Maximum (+42%)'}],
+    note:'Basic Kokumin Nenkin + Kosei Nenkin (employee). Visit nenkin.go.jp for your record.',
+    calc(earnings, workYrs, claimAge) {
+      // Basic pension: ¥816,000/yr for 40 years, pro-rated
+      const basicAnnual = 816000 * Math.min(workYrs, 40) / 40;
+      // Employee pension: avg ~¥1.5M/yr, scaled by earnings ratio
+      const avgSalary = 4500000;
+      const empAnnual = 1500000 * (earnings / avgSalary) * (workYrs / 40);
+      const totalAnnual = basicAnnual + empAnnual;
+      const base = totalAnnual / 12;
+      const adjust = (age) => {
+        if (age === 65) return base;
+        if (age < 65)  return base * (1 - (65-age)*0.048);
+        return base * (1 + (age-65)*0.084);
+      };
+      return {early:adjust(60), fra:adjust(65), max:adjust(70), chosen:adjust(claimAge)};
+    }
+  },
+  {
+    code:'CN', flag:'🇨🇳', label:'CN', sym:'¥',
+    fra:60, earningsMax:1000000,
+    claimAges:[{age:60,label:'Age 60',sub:'Standard age'},{age:60,label:'Age 60',sub:'(no early option)'},{age:60,label:'Age 60',sub:'Standard'}],
+    note:'Basic pension formula: (provincial avg + indexed personal salary)/2 × years × 1%.',
+    calc(earnings, workYrs, claimAge) {
+      const provincialAvg = 90000; // approx annual
+      const indexedSalary = earnings;
+      const monthly = ((provincialAvg + indexedSalary) / 2) * workYrs * 0.01 / 12;
+      return {early:monthly, fra:monthly, max:monthly, chosen:monthly};
+    }
+  }
+];
+
+let activeCountry = COUNTRIES[0];
+let claimAge = 67;
+
+function updateEarnLabel(val) {
+  const sym = activeCountry.sym;
+  const n = parseInt(val);
+  document.getElementById('earn-val').textContent = sym + n.toLocaleString();
+}
+
+function buildGrid() {
+  const g = document.getElementById('countryGrid');
+  COUNTRIES.forEach((c,i) => {
+    const b = document.createElement('button');
+    b.className = 'cb' + (i===0?' active':'');
+    b.innerHTML = c.flag + '<br>' + c.label;
+    b.onclick = () => {
+      document.querySelectorAll('.cb').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      activeCountry = c;
+      claimAge = c.fra;
+      updateEarnLabel(document.getElementById('earnings').value);
+      buildAgeOpts();
+    };
+    g.appendChild(b);
+  });
+}
+
+function buildAgeOpts() {
+  const c = activeCountry;
+  const opts = document.getElementById('ageOpts');
+  opts.innerHTML = '';
+  c.claimAges.forEach((o,i) => {
+    const b = document.createElement('div');
+    b.className = 'age-opt' + (i===1?' active':'');
+    b.innerHTML = o.label + '<small>' + o.sub + '</small>';
+    b.onclick = () => {
+      document.querySelectorAll('.age-opt').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      claimAge = o.age;
+    };
+    opts.appendChild(b);
+    if (i===1) claimAge = o.age;
+  });
+}
+
+function fmt(n) {
+  const sym = activeCountry.sym;
+  if (sym === '¥') return sym + Math.round(n).toLocaleString();
+  return sym + Math.round(n).toLocaleString();
+}
+
+function calculate() {
+  const curAge  = parseInt(document.getElementById('cur-age').value) || 45;
+  const workYrs = parseInt(document.getElementById('work-years').value) || 20;
+  const earnings = parseInt(document.getElementById('earnings').value) || 65000;
+  const c = activeCountry;
+
+  const res = c.calc(earnings, workYrs, claimAge, curAge);
+  const chosen = res.chosen;
+  const fraMonthly = res.fra;
+  const earlyMonthly = res.early;
+  const maxMonthly = res.max;
+
+  const yearsCollecting = Math.max(85 - claimAge, 0);
+  const lifetime = chosen * 12 * yearsCollecting;
+
+  // Break-even vs early claim
+  let breakEvenText = 'N/A';
+  if (claimAge > c.claimAges[0].age && earlyMonthly > 0) {
+    const earlyAge = c.claimAges[0].age;
+    const upfrontLoss = earlyMonthly * 12 * (claimAge - earlyAge);
+    const monthlyGain = chosen - earlyMonthly;
+    if (monthlyGain > 0) {
+      const beYrs = Math.round(upfrontLoss / (monthlyGain * 12));
+      breakEvenText = 'Age ' + (claimAge + beYrs);
+    }
+  }
+
+  document.getElementById('monthly-benefit').textContent = fmt(chosen) + '/mo';
+  document.getElementById('benefit-sub').textContent = `Estimated benefit if you claim at age ${claimAge}`;
+  document.getElementById('p-annual').textContent   = fmt(chosen * 12);
+  document.getElementById('p-lifetime').textContent = fmt(lifetime);
+  document.getElementById('p-fra').textContent      = fmt(fraMonthly) + '/mo';
+  document.getElementById('p-breakeven').textContent = breakEvenText;
+  document.getElementById('result-note').textContent = '⚠️ ' + c.note;
+
+  const maxB = Math.max(earlyMonthly, fraMonthly, maxMonthly, 0.01);
+  const bars = [
+    {label: 'Age ' + c.claimAges[0].age, val: earlyMonthly, color:'#f59e0b'},
+    {label: 'Age ' + c.claimAges[1].age, val: fraMonthly,   color:'#6366f1'},
+    {label: 'Age ' + c.claimAges[2].age, val: maxMonthly,   color:'#10b981'},
+  ];
+  document.getElementById('comp-bars').innerHTML = bars.map(b =>
+    `<div class="comp-row">
+      <div class="comp-label">${b.label}</div>
+      <div class="comp-bar-wrap"><div class="comp-bar" style="width:${(b.val/maxB*100).toFixed(1)}%;background:${b.color}"></div></div>
+      <div class="comp-amt">${fmt(b.val)}/mo</div>
+    </div>`
+  ).join('');
+
+  const el = document.getElementById('result');
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+}
+
+buildGrid();
+buildAgeOpts();
+</script>
 </body>
 </html>

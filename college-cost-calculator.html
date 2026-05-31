@@ -1,205 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>College Cost Calculator – 529 Savings Planner</title>
-  <meta name="description" content="Free college cost calculator. Estimate total college costs with tuition inflation, and find out how much to save monthly in a 529 plan to cover your child's education.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    input[type="number"],input[type="range"],select { width:100%; }
-    input[type="number"],select { padding:12px 16px; border:2px solid #e2e8f0; border-radius:10px;
-      font-size:16px; outline:none; background:#f8fafc; transition:border-color .2s; }
-    input[type="number"]:focus,select:focus { border-color:#6366f1; background:#fff; }
-    input[type="range"] { accent-color:#6366f1; margin-top:6px; }
-    .range-val { font-size:13px; font-weight:700; color:#6366f1; }
-    .col-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
-    .col-item { background:#f5f3ff; border-radius:10px; padding:14px; border-left:3px solid #8b5cf6; }
-    .col-val { font-size:1.1rem; font-weight:700; color:#4f46e5; }
-    .col-lbl { font-size:12px; color:#64748b; margin-top:3px; }
-    .big-num { font-size:clamp(1.8rem,7vw,2.8rem); font-weight:800;
-               background:linear-gradient(135deg,#6366f1,#8b5cf6);
-               -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .school-types { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:16px; }
-    .school-btn { padding:10px 6px; border:2px solid #e2e8f0; border-radius:10px; background:#fff;
-                  font-size:12px; font-weight:600; color:#64748b; cursor:pointer; text-align:center; transition:all .2s; }
-    .school-btn.active { border-color:#6366f1; color:#6366f1; background:#ede9fe; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>College Cost Calculator – US, UK, Canada, Australia &amp; More</title>
+<meta name="description" content="Free college savings calculator for US 529, UK tuition, Canada RESP, Australia HECS and more. Estimate future education costs and monthly savings needed.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<style>
+.cg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
+@media(max-width:480px){.cg{grid-template-columns:repeat(3,1fr)}}
+.cb{padding:8px 4px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;text-align:center;transition:all .2s}
+.cb.active{border-color:#6366f1;color:#6366f1;background:#ede9fe}
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.ri{background:#f5f3ff;border-radius:10px;padding:14px;border-left:3px solid #8b5cf6}
+.rv{font-size:1.1rem;font-weight:700;color:#4f46e5}
+.rl{font-size:12px;color:#64748b;margin-top:3px}
+input[type=number]{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;outline:none;background:#f8fafc;transition:border-color .2s}
+input[type=number]:focus{border-color:#6366f1;background:#fff}
+input[type=range]{width:100%;accent-color:#6366f1;margin-top:6px}
+.range-val{font-size:13px;font-weight:700;color:#6366f1}
+.school-types{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}
+.school-btn{padding:10px 6px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;text-align:center;transition:all .2s}
+.school-btn.active{border-color:#6366f1;color:#6366f1;background:#ede9fe}
+.big-num{font-size:clamp(1.8rem,7vw,2.8rem);font-weight:800;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+</style>
 </head>
 <body>
 <div class="page">
-  <nav class="nav" style="flex-wrap:wrap">
-    <a href="index.html">🎂 Age</a>
-    <a href="age-difference.html">↔ Difference</a>
-    <a href="birthday-countdown.html">⏳ Countdown</a>
-    <a href="date-calculator.html">📅 Date Calc</a>
-    <a href="day-of-week.html">📆 Day of Week</a>
-    <a href="life-progress.html">🌱 Life Progress</a>
-    <a href="tax-calculator.html">💰 Tax</a>
-    <a href="retirement-calculator.html">🏖️ Retirement</a>
-    <a href="loan-calculator.html">🏦 Loan</a>
-    <a href="college-cost-calculator.html" class="active">🎓 College</a>
-    <a href="currency-converter.html">💱 Currency</a>
-    <a href="pension-calculator.html">👴 Pension</a>
-  </nav>
+<nav class="nav" style="flex-wrap:wrap">
+<a href="index.html">🎂 Age</a><a href="age-difference.html">↔ Difference</a><a href="birthday-countdown.html">⏳ Countdown</a><a href="date-calculator.html">📅 Date Calc</a><a href="day-of-week.html">📆 Day of Week</a><a href="life-progress.html">🌱 Life Progress</a><a href="tax-calculator.html">💰 Tax</a><a href="retirement-calculator.html">🏖️ Retirement</a><a href="loan-calculator.html">🏦 Loan</a><a href="college-cost-calculator.html" class="active">🎓 College</a><a href="currency-converter.html">💱 Currency</a><a href="pension-calculator.html">👴 Pension</a>
+</nav>
 
-  <div class="badge">529 Savings Planner</div>
-  <h1>College Cost Calculator</h1>
-  <p class="subtitle">Estimate future tuition costs & monthly savings needed</p>
-  <p class="trust">Free • US College Data • No Sign Up</p>
+<div class="badge">529 · RESP · HECS · ISA</div>
+<h1>College Cost Calculator</h1>
+<p class="subtitle">Estimate future education costs &amp; monthly savings needed</p>
+<p class="trust">Free • Multi-Country • No Sign Up</p>
 
-  <div class="card">
-    <div class="field">
-      <label>School Type</label>
-      <div class="school-types">
-        <div class="school-btn active" onclick="selectSchool(this,18700)">🏫 Community<br><small>$18,700/yr</small></div>
-        <div class="school-btn" onclick="selectSchool(this,28840)">🏛️ Public 4-yr<br><small>$28,840/yr</small></div>
-        <div class="school-btn" onclick="selectSchool(this,60420)">🎓 Private 4-yr<br><small>$60,420/yr</small></div>
-      </div>
-    </div>
-    <div class="two-col">
-      <div class="field">
-        <label for="child-age">Child's Current Age</label>
-        <input type="number" id="child-age" placeholder="5" min="0" max="17" value="5">
-      </div>
-      <div class="field">
-        <label for="current-col-savings">Current Savings ($)</label>
-        <input type="number" id="current-col-savings" placeholder="0" min="0" value="0">
-      </div>
-    </div>
-    <div class="field">
-      <label>Tuition Inflation Rate: <span class="range-val" id="inflation-val">5%</span></label>
-      <input type="range" id="inflation" min="1" max="10" value="5"
-        oninput="document.getElementById('inflation-val').textContent=this.value+'%'">
-    </div>
-    <div class="field">
-      <label>529 Investment Return: <span class="range-val" id="col-return-val">6%</span></label>
-      <input type="range" id="col-return" min="1" max="12" value="6"
-        oninput="document.getElementById('col-return-val').textContent=this.value+'%'">
-    </div>
-    <button class="btn" onclick="calculate()">Calculate College Costs</button>
-  </div>
+<div class="card">
+  <label class="label" style="font-size:13px;font-weight:600;color:#475569;display:block;margin-bottom:8px">Select Country</label>
+  <div class="cg" id="countryGrid"></div>
 
-  <div class="card result" id="result">
-    <div style="text-align:center;padding:12px 0 8px">
-      <div class="big-num" id="total-cost"></div>
-      <div style="font-size:13px;color:#64748b;margin-top:4px">Estimated total 4-year cost (future dollars)</div>
-    </div>
-    <div class="col-grid">
-      <div class="col-item"><div class="col-val" id="c-today"></div><div class="col-lbl">Cost in today's dollars</div></div>
-      <div class="col-item"><div class="col-val" id="c-years"></div><div class="col-lbl">Years until college</div></div>
-      <div class="col-item"><div class="col-val" id="c-monthly"></div><div class="col-lbl">Monthly savings needed</div></div>
-      <div class="col-item"><div class="col-val" id="c-gap"></div><div class="col-lbl">Savings gap</div></div>
-      <div class="col-item"><div class="col-val" id="c-529growth"></div><div class="col-lbl">529 growth (tax-free)</div></div>
-      <div class="col-item"><div class="col-val" id="c-peryear"></div><div class="col-lbl">Cost per year (future)</div></div>
+  <div id="schoolTypeWrap" class="field">
+    <label>School Type</label>
+    <div class="school-types">
+      <div class="school-btn" onclick="selectSchool(this,18700,'Community')">🏫 Community<br><small>$18,700/yr</small></div>
+      <div class="school-btn active" onclick="selectSchool(this,28840,'Public 4-yr')">🏛️ Public 4-yr<br><small>$28,840/yr</small></div>
+      <div class="school-btn" onclick="selectSchool(this,60420,'Private 4-yr')">🎓 Private 4-yr<br><small>$60,420/yr</small></div>
     </div>
   </div>
 
-  <div class="seo">
-    <h2>About This College Cost Calculator</h2>
-    <p>This free college savings calculator helps parents estimate the future cost of college and how much to save monthly in a 529 plan. It accounts for tuition inflation (historically ~5%/year) and investment returns to show the real cost when your child reaches college age.</p>
+  <div class="two-col">
+    <div class="field">
+      <label for="child-age">Child's Current Age</label>
+      <input type="number" id="child-age" value="5" min="0" max="17">
+    </div>
+    <div class="field">
+      <label for="cur-savings">Current Savings (<span id="symLabel">$</span>)</label>
+      <input type="number" id="cur-savings" value="0" min="0">
+    </div>
+  </div>
+  <div class="field">
+    <label>Tuition Inflation Rate: <span class="range-val" id="inflation-val">5%</span></label>
+    <input type="range" id="inflation" min="1" max="10" value="5"
+      oninput="document.getElementById('inflation-val').textContent=this.value+'%'">
+  </div>
+  <div class="field">
+    <label>Investment Return: <span class="range-val" id="return-val">6%</span></label>
+    <input type="range" id="inv-return" min="1" max="12" value="6"
+      oninput="document.getElementById('return-val').textContent=this.value+'%'">
+  </div>
+  <button class="btn" onclick="calculate()">Calculate College Costs</button>
+</div>
+
+<div class="card result" id="result">
+  <div style="text-align:center;padding:12px 0 8px">
+    <div class="big-num" id="total-cost"></div>
+    <div style="font-size:13px;color:#64748b;margin-top:4px">Estimated total 4-year cost (future dollars)</div>
+  </div>
+  <div class="rg">
+    <div class="ri"><div class="rv" id="c-today"></div><div class="rl">Today's 4-year cost</div></div>
+    <div class="ri"><div class="rv" id="c-years"></div><div class="rl">Years until college</div></div>
+    <div class="ri"><div class="rv" id="c-monthly"></div><div class="rl">Monthly savings needed</div></div>
+    <div class="ri"><div class="rv" id="c-gap"></div><div class="rl">Savings gap</div></div>
+    <div class="ri"><div class="rv" id="c-growth"></div><div class="rl">Account growth</div></div>
+    <div class="ri"><div class="rv" id="c-peryear"></div><div class="rl">Cost per year (future)</div></div>
   </div>
 </div>
-<script>
-  let _annualCost = 18700;
 
-  function selectSchool(el, cost) {
-    document.querySelectorAll('.school-btn').forEach(b => b.classList.remove('active'));
-    el.classList.add('active');
-    _annualCost = cost;
-  }
-
-  function fmt(n) { return '$' + Math.round(n).toLocaleString(); }
-
-  function calculate() {
-    const childAge   = parseInt(document.getElementById('child-age').value) || 5;
-    const curSavings = parseFloat(document.getElementById('current-col-savings').value) || 0;
-    const inflation  = parseInt(document.getElementById('inflation').value) / 100;
-    const retRate    = parseInt(document.getElementById('col-return').value) / 100;
-
-    const yearsUntil = Math.max(18 - childAge, 1);
-    const monthlyRate = retRate / 12;
-    const months = yearsUntil * 12;
-
-    // Future cost per year at college start
-    const futureAnnual = _annualCost * Math.pow(1 + inflation, yearsUntil);
-    // 4-year total (each year inflates further)
-    let totalFuture = 0;
-    for (let i = 0; i < 4; i++) totalFuture += _annualCost * Math.pow(1 + inflation, yearsUntil + i);
-
-    const todayCost = _annualCost * 4;
-
-    // FV of current savings
-    const fvCurrent = curSavings * Math.pow(1 + retRate, yearsUntil);
-    const gap = Math.max(totalFuture - fvCurrent, 0);
-
-    // Monthly savings needed to cover gap
-    const monthly = gap > 0 && monthlyRate > 0
-      ? gap * monthlyRate / (Math.pow(1 + monthlyRate, months) - 1)
-      : gap / months;
-
-    const growth529 = (curSavings + monthly * months) * (Math.pow(1 + retRate, yearsUntil) - 1);
-
-    document.getElementById('total-cost').textContent = fmt(totalFuture);
-    document.getElementById('c-today').textContent    = fmt(todayCost);
-    document.getElementById('c-years').textContent    = yearsUntil + ' years';
-    document.getElementById('c-monthly').textContent  = fmt(monthly) + '/mo';
-    document.getElementById('c-gap').textContent      = fmt(gap);
-    document.getElementById('c-529growth').textContent = fmt(growth529);
-    document.getElementById('c-peryear').textContent  = fmt(futureAnnual);
-
-    const r = document.getElementById('result');
-    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
-  }
-</script>
+<div class="seo">
+  <h2>About This College Cost Calculator</h2>
+  <p>Estimate future education costs for US (529), UK, Canada (RESP), Australia (HECS), Germany, France, Japan and China. Accounts for tuition inflation and investment returns to show the real cost when your child reaches college age.</p>
+</div>
+</div>
 
 <!-- Cookie Consent Banner -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
-  background:#1e293b;color:#e2e8f0;padding:16px 20px;
-  box-shadow:0 -4px 20px rgba(0,0,0,.2)">
-  <div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">
-      🍪 We use cookies to analyze site traffic and improve your experience.
-      See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.
-    </div>
-    <div style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);
-        color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">
-        Accept All
-      </button>
-      <button onclick="declineCookies()" style="padding:8px 18px;background:transparent;
-        color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">
-        Decline
-      </button>
-    </div>
-  </div>
-</div>
-<script>
-  (function() {
-    var consent = localStorage.getItem('cookie_consent');
-    if (!consent) document.getElementById('cookie-banner').style.display = 'block';
-  })();
-  function acceptCookies() {
-    localStorage.setItem('cookie_consent', 'accepted');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-  function declineCookies() {
-    localStorage.setItem('cookie_consent', 'declined');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-</script>
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1e293b;color:#e2e8f0;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.2)"><div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">🍪 We use cookies to analyze site traffic. See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.</div><div style="display:flex;gap:8px;flex-shrink:0"><button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Accept All</button><button onclick="declineCookies()" style="padding:8px 18px;background:transparent;color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">Decline</button></div></div></div>
+<script>(function(){var c=localStorage.getItem('cookie_consent');if(!c)document.getElementById('cookie-banner').style.display='block';})();function acceptCookies(){localStorage.setItem('cookie_consent','accepted');document.getElementById('cookie-banner').style.display='none';}function declineCookies(){localStorage.setItem('cookie_consent','declined');document.getElementById('cookie-banner').style.display='none';}</script>
+<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2"><div style="margin-bottom:8px"><a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a><a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a><a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a></div><div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div><div style="margin-top:4px">All results are estimates for informational purposes only.</div></footer>
 
-<!-- Footer -->
-<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;
-  border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2">
-  <div style="margin-bottom:8px">
-    <a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a>
-    <a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a>
-    <a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a>
-  </div>
-  <div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div>
-  <div style="margin-top:4px">All results are estimates for informational purposes only.</div>
-</footer>
+<script>
+const COUNTRIES = [
+  {code:'US',flag:'🇺🇸',label:'US',sym:'$',   cost:28840, note:null},
+  {code:'UK',flag:'🇬🇧',label:'UK',sym:'£',   cost:9250,  note:'Max tuition fee'},
+  {code:'CA',flag:'🇨🇦',label:'CA',sym:'CA$', cost:7000,  note:'Avg university'},
+  {code:'AU',flag:'🇦🇺',label:'AU',sym:'A$',  cost:15000, note:'Avg domestic'},
+  {code:'DE',flag:'🇩🇪',label:'DE',sym:'€',   cost:500,   note:'Semester fee only'},
+  {code:'FR',flag:'🇫🇷',label:'FR',sym:'€',   cost:3000,  note:'Grande école avg'},
+  {code:'JP',flag:'🇯🇵',label:'JP',sym:'¥',   cost:535800,note:'National university'},
+  {code:'CN',flag:'🇨🇳',label:'CN',sym:'¥',   cost:6000,  note:'Public university'}
+];
+let activeSym = '$', annualCost = 28840, activeCountry = COUNTRIES[0];
+
+(function buildGrid(){
+  const g = document.getElementById('countryGrid');
+  COUNTRIES.forEach((c,i) => {
+    const b = document.createElement('button');
+    b.className = 'cb' + (i===0?' active':'');
+    b.innerHTML = c.flag + '<br>' + c.label;
+    b.onclick = () => {
+      document.querySelectorAll('.cb').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      activeSym = c.sym;
+      activeCountry = c;
+      document.getElementById('symLabel').textContent = c.sym;
+      const stw = document.getElementById('schoolTypeWrap');
+      if (c.code === 'US') {
+        stw.style.display = '';
+        annualCost = 28840;
+        document.querySelectorAll('.school-btn').forEach((sb,si)=>sb.classList.toggle('active',si===1));
+      } else {
+        stw.style.display = 'none';
+        annualCost = c.cost;
+      }
+    };
+    g.appendChild(b);
+  });
+})();
+
+function selectSchool(el, cost) {
+  document.querySelectorAll('.school-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  annualCost = cost;
+}
+
+function fmt(n) {
+  if (activeSym === '¥') return activeSym + Math.round(n).toLocaleString();
+  return activeSym + Math.round(n).toLocaleString();
+}
+
+function calculate() {
+  const childAge  = parseInt(document.getElementById('child-age').value) || 5;
+  const curSav    = parseFloat(document.getElementById('cur-savings').value) || 0;
+  const inflation = parseInt(document.getElementById('inflation').value) / 100;
+  const retRate   = parseInt(document.getElementById('inv-return').value) / 100;
+  const yearsUntil = Math.max(18 - childAge, 1);
+  const months = yearsUntil * 12;
+  const mr = retRate / 12;
+
+  let totalFuture = 0;
+  for (let i = 0; i < 4; i++) totalFuture += annualCost * Math.pow(1+inflation, yearsUntil+i);
+  const futureAnnual = annualCost * Math.pow(1+inflation, yearsUntil);
+  const todayCost = annualCost * 4;
+  const fvCurrent = curSav * Math.pow(1+retRate, yearsUntil);
+  const gap = Math.max(totalFuture - fvCurrent, 0);
+  const monthly = gap > 0 && mr > 0 ? gap*mr/(Math.pow(1+mr,months)-1) : gap/months;
+  const growth = (curSav + monthly*months) * (Math.pow(1+retRate, yearsUntil) - 1);
+
+  document.getElementById('total-cost').textContent = fmt(totalFuture);
+  document.getElementById('c-today').textContent    = fmt(todayCost);
+  document.getElementById('c-years').textContent    = yearsUntil + ' years';
+  document.getElementById('c-monthly').textContent  = fmt(monthly) + '/mo';
+  document.getElementById('c-gap').textContent      = fmt(gap);
+  document.getElementById('c-growth').textContent   = fmt(growth);
+  document.getElementById('c-peryear').textContent  = fmt(futureAnnual);
+
+  const el = document.getElementById('result');
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+}
+</script>
 </body>
 </html>

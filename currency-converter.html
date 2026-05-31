@@ -1,223 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Currency Converter – Live Exchange Rates</title>
-  <meta name="description" content="Free currency converter with live exchange rates. Convert USD, EUR, GBP, JPY, CNY and 20+ major currencies instantly. No sign-up required.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💱</text></svg>">
-  <link rel="stylesheet" href="styles.css">
-  <style>
-    input[type="number"],select { width:100%; padding:12px 16px; border:2px solid #e2e8f0;
-      border-radius:10px; font-size:16px; outline:none; background:#f8fafc; transition:border-color .2s; }
-    input[type="number"]:focus,select:focus { border-color:#6366f1; background:#fff; }
-    .swap-btn { display:block; margin:0 auto 16px; background:none; border:2px solid #c7d2fe;
-      border-radius:50%; width:40px; height:40px; font-size:1.2rem; cursor:pointer;
-      transition:background .2s; color:#6366f1; }
-    .swap-btn:hover { background:#ede9fe; }
-    .conv-result { text-align:center; padding:16px 0; }
-    .conv-big { font-size:clamp(1.8rem,7vw,2.8rem); font-weight:800;
-                background:linear-gradient(135deg,#6366f1,#8b5cf6);
-                -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .conv-rate { font-size:13px; color:#64748b; margin-top:6px; }
-    .multi-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:16px; }
-    .multi-item { background:#f8fafc; border-radius:10px; padding:12px 14px;
-                  display:flex; justify-content:space-between; align-items:center; border:1px solid #e2e8f0; }
-    .multi-flag { font-size:1.2rem; }
-    .multi-name { font-size:12px; color:#64748b; }
-    .multi-val { font-size:14px; font-weight:700; color:#1e293b; }
-    .rate-note { font-size:11px; color:#94a3b8; text-align:center; margin-top:12px; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Currency Converter – Live Exchange Rates</title>
+<meta name="description" content="Free currency converter with reference exchange rates. Convert USD, EUR, GBP, JPY, CNY and 20+ major currencies instantly.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💱</text></svg>">
+<link rel="stylesheet" href="styles.css">
+<style>
+input[type=number],select{width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;outline:none;background:#f8fafc;transition:border-color .2s}
+input[type=number]:focus,select:focus{border-color:#6366f1;background:#fff}
+.swap-btn{display:block;margin:0 auto 16px;background:none;border:2px solid #c7d2fe;border-radius:50%;width:40px;height:40px;font-size:1.2rem;cursor:pointer;transition:background .2s;color:#6366f1}
+.swap-btn:hover{background:#ede9fe}
+.conv-big{font-size:clamp(1.8rem,7vw,2.8rem);font-weight:800;background:linear-gradient(135deg,#6366f1,#8b5cf6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;padding:12px 0 4px}
+.conv-rate{font-size:13px;color:#64748b;text-align:center;margin-bottom:12px}
+.multi-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+.multi-item{background:#f8fafc;border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;border:1px solid #e2e8f0}
+.multi-val{font-size:14px;font-weight:700;color:#1e293b}
+.rate-note{font-size:11px;color:#94a3b8;text-align:center;margin-top:12px}
+/* Base currency quick-select */
+.base-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
+.base-btn{padding:6px 10px;border:2px solid #e2e8f0;border-radius:8px;background:#fff;font-size:12px;font-weight:600;color:#64748b;cursor:pointer;transition:all .2s}
+.base-btn.active{border-color:#6366f1;color:#6366f1;background:#ede9fe}
+</style>
 </head>
 <body>
 <div class="page">
-  <nav class="nav" style="flex-wrap:wrap">
-    <a href="index.html">🎂 Age</a>
-    <a href="age-difference.html">↔ Difference</a>
-    <a href="birthday-countdown.html">⏳ Countdown</a>
-    <a href="date-calculator.html">📅 Date Calc</a>
-    <a href="day-of-week.html">📆 Day of Week</a>
-    <a href="life-progress.html">🌱 Life Progress</a>
-    <a href="tax-calculator.html">💰 Tax</a>
-    <a href="retirement-calculator.html">🏖️ Retirement</a>
-    <a href="loan-calculator.html">🏦 Loan</a>
-    <a href="college-cost-calculator.html">🎓 College</a>
-    <a href="currency-converter.html" class="active">💱 Currency</a>
-    <a href="pension-calculator.html">👴 Pension</a>
-  </nav>
+<nav class="nav" style="flex-wrap:wrap">
+<a href="index.html">🎂 Age</a><a href="age-difference.html">↔ Difference</a><a href="birthday-countdown.html">⏳ Countdown</a><a href="date-calculator.html">📅 Date Calc</a><a href="day-of-week.html">📆 Day of Week</a><a href="life-progress.html">🌱 Life Progress</a><a href="tax-calculator.html">💰 Tax</a><a href="retirement-calculator.html">🏖️ Retirement</a><a href="loan-calculator.html">🏦 Loan</a><a href="college-cost-calculator.html">🎓 College</a><a href="currency-converter.html" class="active">💱 Currency</a><a href="pension-calculator.html">👴 Pension</a>
+</nav>
 
-  <div class="badge">20+ Currencies</div>
-  <h1>Currency Converter</h1>
-  <p class="subtitle">Convert between major world currencies instantly</p>
-  <p class="trust">Free • Reference Rates • No Sign Up</p>
+<div class="badge">20+ Currencies</div>
+<h1>Currency Converter</h1>
+<p class="subtitle">Convert between major world currencies instantly</p>
+<p class="trust">Free • Reference Rates • No Sign Up</p>
 
-  <div class="card">
+<div class="card">
+  <label style="font-size:13px;font-weight:600;color:#475569;display:block;margin-bottom:8px">Base Currency</label>
+  <div class="base-row" id="baseRow"></div>
+
+  <div class="field">
+    <label for="amount">Amount</label>
+    <input type="number" id="amount" value="100" min="0" step="any">
+  </div>
+  <div class="two-col">
     <div class="field">
-      <label for="amount">Amount</label>
-      <input type="number" id="amount" value="100" min="0" step="any">
+      <label for="from-cur">From</label>
+      <select id="from-cur"></select>
     </div>
-    <div class="two-col">
-      <div class="field">
-        <label for="from-cur">From</label>
-        <select id="from-cur"></select>
-      </div>
-      <div class="field">
-        <label for="to-cur">To</label>
-        <select id="to-cur"></select>
-      </div>
+    <div class="field">
+      <label for="to-cur">To</label>
+      <select id="to-cur"></select>
     </div>
-    <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies">⇅</button>
-    <button class="btn" onclick="convert()">Convert</button>
   </div>
-
-  <div class="card result" id="result">
-    <div class="conv-result">
-      <div class="conv-big" id="conv-big"></div>
-      <div class="conv-rate" id="conv-rate"></div>
-    </div>
-    <div class="multi-grid" id="multi-grid"></div>
-    <div class="rate-note">⚠️ Reference rates — for informational use only. Rates updated periodically.</div>
-  </div>
-
-  <div class="seo">
-    <h2>About This Currency Converter</h2>
-    <p>This free currency converter lets you quickly convert between USD, EUR, GBP, JPY, CNY, and 20+ major world currencies. Enter an amount, select your currencies, and get an instant conversion with a multi-currency comparison table.</p>
-  </div>
+  <button class="swap-btn" onclick="swapCurrencies()" title="Swap currencies">⇅</button>
+  <button class="btn" onclick="convert()">Convert</button>
 </div>
-<script>
-  // Reference rates vs USD (approximate, periodically updated)
-  const RATES = {
-    USD:{rate:1,      flag:'🇺🇸',name:'US Dollar'},
-    EUR:{rate:0.92,   flag:'🇪🇺',name:'Euro'},
-    GBP:{rate:0.79,   flag:'🇬🇧',name:'British Pound'},
-    JPY:{rate:149.5,  flag:'🇯🇵',name:'Japanese Yen'},
-    CNY:{rate:7.24,   flag:'🇨🇳',name:'Chinese Yuan'},
-    CAD:{rate:1.36,   flag:'🇨🇦',name:'Canadian Dollar'},
-    AUD:{rate:1.53,   flag:'🇦🇺',name:'Australian Dollar'},
-    CHF:{rate:0.90,   flag:'🇨🇭',name:'Swiss Franc'},
-    HKD:{rate:7.82,   flag:'🇭🇰',name:'Hong Kong Dollar'},
-    SGD:{rate:1.34,   flag:'🇸🇬',name:'Singapore Dollar'},
-    INR:{rate:83.1,   flag:'🇮🇳',name:'Indian Rupee'},
-    KRW:{rate:1325,   flag:'🇰🇷',name:'South Korean Won'},
-    MXN:{rate:17.2,   flag:'🇲🇽',name:'Mexican Peso'},
-    BRL:{rate:4.97,   flag:'🇧🇷',name:'Brazilian Real'},
-    SEK:{rate:10.4,   flag:'🇸🇪',name:'Swedish Krona'},
-    NOK:{rate:10.6,   flag:'🇳🇴',name:'Norwegian Krone'},
-    DKK:{rate:6.88,   flag:'🇩🇰',name:'Danish Krone'},
-    NZD:{rate:1.63,   flag:'🇳🇿',name:'New Zealand Dollar'},
-    ZAR:{rate:18.6,   flag:'🇿🇦',name:'South African Rand'},
-    AED:{rate:3.67,   flag:'🇦🇪',name:'UAE Dirham'},
-    SAR:{rate:3.75,   flag:'🇸🇦',name:'Saudi Riyal'},
-    THB:{rate:35.1,   flag:'🇹🇭',name:'Thai Baht'},
-  };
 
-  const HIGHLIGHT = ['EUR','GBP','JPY','CNY','CAD','AUD','CHF','HKD','SGD','INR','KRW'];
+<div class="card result" id="result">
+  <div class="conv-big" id="conv-big"></div>
+  <div class="conv-rate" id="conv-rate"></div>
+  <div class="multi-grid" id="multi-grid"></div>
+  <div class="rate-note">⚠️ Reference rates — for informational use only. Rates updated periodically.</div>
+</div>
 
-  // Populate selects
-  function buildSelects() {
-    const codes = Object.keys(RATES);
-    ['from-cur','to-cur'].forEach((id, i) => {
-      const sel = document.getElementById(id);
-      codes.forEach(code => {
-        const opt = document.createElement('option');
-        opt.value = code;
-        opt.textContent = `${RATES[code].flag} ${code} – ${RATES[code].name}`;
-        if ((i === 0 && code === 'USD') || (i === 1 && code === 'EUR')) opt.selected = true;
-        sel.appendChild(opt);
-      });
-    });
-  }
-
-  function swapCurrencies() {
-    const f = document.getElementById('from-cur');
-    const t = document.getElementById('to-cur');
-    [f.value, t.value] = [t.value, f.value];
-    convert();
-  }
-
-  function convert() {
-    const amount = parseFloat(document.getElementById('amount').value);
-    const from   = document.getElementById('from-cur').value;
-    const to     = document.getElementById('to-cur').value;
-    if (isNaN(amount) || amount < 0) { alert('Please enter a valid amount.'); return; }
-
-    const inUSD  = amount / RATES[from].rate;
-    const result = inUSD * RATES[to].rate;
-    const rate   = RATES[to].rate / RATES[from].rate;
-
-    const fmtNum = n => n >= 1000 ? n.toLocaleString('en-US',{maximumFractionDigits:2})
-                                  : n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4});
-
-    document.getElementById('conv-big').textContent =
-      `${RATES[to].flag} ${fmtNum(result)} ${to}`;
-    document.getElementById('conv-rate').textContent =
-      `1 ${from} = ${fmtNum(rate)} ${to}  ·  1 ${to} = ${fmtNum(1/rate)} ${from}`;
-
-    // Multi-currency grid
-    document.getElementById('multi-grid').innerHTML = HIGHLIGHT
-      .filter(c => c !== from)
-      .map(c => {
-        const val = inUSD * RATES[c].rate;
-        return `<div class="multi-item">
-          <div><div class="multi-flag">${RATES[c].flag}</div><div class="multi-name">${c}</div></div>
-          <div class="multi-val">${fmtNum(val)}</div>
-        </div>`;
-      }).join('');
-
-    const r = document.getElementById('result');
-    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
-  }
-
-  buildSelects();
-  convert();
-</script>
+<div class="seo">
+  <h2>About This Currency Converter</h2>
+  <p>Convert between USD, EUR, GBP, JPY, CNY, and 20+ major world currencies. Use the base currency quick-select to set your starting currency, then enter an amount for an instant conversion with a multi-currency comparison.</p>
+</div>
+</div>
 
 <!-- Cookie Consent Banner -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
-  background:#1e293b;color:#e2e8f0;padding:16px 20px;
-  box-shadow:0 -4px 20px rgba(0,0,0,.2)">
-  <div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">
-      🍪 We use cookies to analyze site traffic and improve your experience.
-      See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.
-    </div>
-    <div style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);
-        color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">
-        Accept All
-      </button>
-      <button onclick="declineCookies()" style="padding:8px 18px;background:transparent;
-        color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">
-        Decline
-      </button>
-    </div>
-  </div>
-</div>
-<script>
-  (function() {
-    var consent = localStorage.getItem('cookie_consent');
-    if (!consent) document.getElementById('cookie-banner').style.display = 'block';
-  })();
-  function acceptCookies() {
-    localStorage.setItem('cookie_consent', 'accepted');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-  function declineCookies() {
-    localStorage.setItem('cookie_consent', 'declined');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-</script>
+<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;background:#1e293b;color:#e2e8f0;padding:16px 20px;box-shadow:0 -4px 20px rgba(0,0,0,.2)"><div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap"><div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">🍪 We use cookies to analyze site traffic. See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.</div><div style="display:flex;gap:8px;flex-shrink:0"><button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">Accept All</button><button onclick="declineCookies()" style="padding:8px 18px;background:transparent;color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">Decline</button></div></div></div>
+<script>(function(){var c=localStorage.getItem('cookie_consent');if(!c)document.getElementById('cookie-banner').style.display='block';})();function acceptCookies(){localStorage.setItem('cookie_consent','accepted');document.getElementById('cookie-banner').style.display='none';}function declineCookies(){localStorage.setItem('cookie_consent','declined');document.getElementById('cookie-banner').style.display='none';}</script>
+<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2"><div style="margin-bottom:8px"><a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a><a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a><a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a></div><div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div><div style="margin-top:4px">All results are estimates for informational purposes only.</div></footer>
 
-<!-- Footer -->
-<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;
-  border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2">
-  <div style="margin-bottom:8px">
-    <a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a>
-    <a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a>
-    <a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a>
-  </div>
-  <div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div>
-  <div style="margin-top:4px">All results are estimates for informational purposes only.</div>
-</footer>
+<script>
+const RATES = {
+  USD:{rate:1,      flag:'🇺🇸',name:'US Dollar'},
+  EUR:{rate:0.92,   flag:'🇪🇺',name:'Euro'},
+  GBP:{rate:0.79,   flag:'🇬🇧',name:'British Pound'},
+  JPY:{rate:149.5,  flag:'🇯🇵',name:'Japanese Yen'},
+  CNY:{rate:7.24,   flag:'🇨🇳',name:'Chinese Yuan'},
+  CAD:{rate:1.36,   flag:'🇨🇦',name:'Canadian Dollar'},
+  AUD:{rate:1.53,   flag:'🇦🇺',name:'Australian Dollar'},
+  CHF:{rate:0.90,   flag:'🇨🇭',name:'Swiss Franc'},
+  HKD:{rate:7.82,   flag:'🇭🇰',name:'Hong Kong Dollar'},
+  SGD:{rate:1.34,   flag:'🇸🇬',name:'Singapore Dollar'},
+  INR:{rate:83.1,   flag:'🇮🇳',name:'Indian Rupee'},
+  KRW:{rate:1325,   flag:'🇰🇷',name:'South Korean Won'},
+  MXN:{rate:17.2,   flag:'🇲🇽',name:'Mexican Peso'},
+  BRL:{rate:4.97,   flag:'🇧🇷',name:'Brazilian Real'},
+  SEK:{rate:10.4,   flag:'🇸🇪',name:'Swedish Krona'},
+  NOK:{rate:10.6,   flag:'🇳🇴',name:'Norwegian Krone'},
+  DKK:{rate:6.88,   flag:'🇩🇰',name:'Danish Krone'},
+  NZD:{rate:1.63,   flag:'🇳🇿',name:'New Zealand Dollar'},
+  ZAR:{rate:18.6,   flag:'🇿🇦',name:'South African Rand'},
+  AED:{rate:3.67,   flag:'🇦🇪',name:'UAE Dirham'},
+  SAR:{rate:3.75,   flag:'🇸🇦',name:'Saudi Riyal'},
+  THB:{rate:35.1,   flag:'🇹🇭',name:'Thai Baht'},
+};
+const BASE_QUICK = ['USD','EUR','GBP','JPY','CNY','CAD','AUD','KRW'];
+const HIGHLIGHT  = ['EUR','GBP','JPY','CNY','CAD','AUD','CHF','HKD','SGD','INR','KRW'];
+
+function buildSelects() {
+  const codes = Object.keys(RATES);
+  ['from-cur','to-cur'].forEach((id,i) => {
+    const sel = document.getElementById(id);
+    codes.forEach(code => {
+      const opt = document.createElement('option');
+      opt.value = code;
+      opt.textContent = `${RATES[code].flag} ${code} – ${RATES[code].name}`;
+      if ((i===0 && code==='USD') || (i===1 && code==='EUR')) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  });
+}
+
+function buildBaseRow() {
+  const row = document.getElementById('baseRow');
+  BASE_QUICK.forEach(code => {
+    const b = document.createElement('button');
+    b.className = 'base-btn' + (code==='USD'?' active':'');
+    b.textContent = RATES[code].flag + ' ' + code;
+    b.onclick = () => {
+      document.querySelectorAll('.base-btn').forEach(x=>x.classList.remove('active'));
+      b.classList.add('active');
+      document.getElementById('from-cur').value = code;
+      convert();
+    };
+    row.appendChild(b);
+  });
+}
+
+function syncBaseRow(code) {
+  document.querySelectorAll('.base-btn').forEach(b => {
+    b.classList.toggle('active', b.textContent.includes(code));
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('from-cur').addEventListener('change', () => syncBaseRow(document.getElementById('from-cur').value));
+});
+
+function swapCurrencies() {
+  const f = document.getElementById('from-cur'), t = document.getElementById('to-cur');
+  [f.value, t.value] = [t.value, f.value];
+  syncBaseRow(f.value);
+  convert();
+}
+
+function fmtNum(n) {
+  return n >= 1000 ? n.toLocaleString('en-US',{maximumFractionDigits:2})
+                   : n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:4});
+}
+
+function convert() {
+  const amount = parseFloat(document.getElementById('amount').value);
+  const from   = document.getElementById('from-cur').value;
+  const to     = document.getElementById('to-cur').value;
+  if (isNaN(amount) || amount < 0) { alert('Please enter a valid amount.'); return; }
+  const inUSD  = amount / RATES[from].rate;
+  const result = inUSD * RATES[to].rate;
+  const rate   = RATES[to].rate / RATES[from].rate;
+
+  document.getElementById('conv-big').textContent = `${RATES[to].flag} ${fmtNum(result)} ${to}`;
+  document.getElementById('conv-rate').textContent = `1 ${from} = ${fmtNum(rate)} ${to}  ·  1 ${to} = ${fmtNum(1/rate)} ${from}`;
+
+  document.getElementById('multi-grid').innerHTML = HIGHLIGHT
+    .filter(c => c !== from)
+    .map(c => {
+      const val = inUSD * RATES[c].rate;
+      return `<div class="multi-item"><div><div style="font-size:1.2rem">${RATES[c].flag}</div><div style="font-size:12px;color:#64748b">${c}</div></div><div class="multi-val">${fmtNum(val)}</div></div>`;
+    }).join('');
+
+  const el = document.getElementById('result');
+  el.classList.remove('show'); void el.offsetWidth; el.classList.add('show');
+}
+
+buildSelects();
+buildBaseRow();
+convert();
+</script>
 </body>
 </html>
