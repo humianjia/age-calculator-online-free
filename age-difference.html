@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Age Difference Calculator – How Big Is the Age Gap?</title>
+  <meta name="description" content="Free age difference calculator. Find the exact age gap between two people in years, months and days. See how old one person was when the other was born. Instant, no sign-up.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+
+  <nav class="nav">
+    <a href="index.html">🎂 Age</a>
+    <a href="age-difference.html" class="active">↔ Difference</a>
+    <a href="birthday-countdown.html">⏳ Countdown</a>
+    <a href="date-calculator.html">📅 Date Calc</a>
+    <a href="day-of-week.html">📆 Day of Week</a>
+    <a href="life-progress.html">🌱 Life Progress</a>
+  </nav>
+
+  <div class="badge">Free Tool</div>
+  <h1>Age Difference Calculator</h1>
+  <p class="subtitle">Find the exact age gap between two people — free &amp; instant</p>
+  <p class="trust">Free • No Sign Up • No Download</p>
+
+  <div class="card">
+    <div class="two-col">
+      <div class="field">
+        <label for="p1">Person 1 – Date of Birth</label>
+        <input type="date" lang="en" id="p1">
+      </div>
+      <div class="field">
+        <label for="p2">Person 2 – Date of Birth</label>
+        <input type="date" lang="en" id="p2">
+      </div>
+    </div>
+    <button class="btn" onclick="calculate()">Calculate Age Gap</button>
+  </div>
+
+  <div class="card result" id="result">
+    <div class="diff-main" id="diff-main"></div>
+    <div class="diff-notes" id="diff-notes"></div>
+    <div class="pct-bar-wrap" id="pct-wrap" style="margin-bottom:16px;display:none">
+      <div style="font-size:12px;color:#64748b;margin-bottom:6px" id="pct-label"></div>
+      <div style="background:#e2e8f0;border-radius:99px;height:10px;overflow:hidden">
+        <div id="pct-bar" style="height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:99px;transition:width .6s ease"></div>
+      </div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+    <button class="btn-share" id="btn-share" onclick="shareResult()">📤 Share Result</button>
+  </div>
+
+  <div class="seo">
+    <h2>About This Age Difference Calculator</h2>
+    <p>Use this free age difference calculator to find the exact age gap between two people in years, months, and days. Whether you're checking a relationship age gap or comparing birthdays, this tool instantly shows how old one person was when the other was born — and puts the gap in perspective. No sign-up, no download required.</p>
+  </div>
+
+</div>
+<script>
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('p1').max = today;
+  document.getElementById('p2').max = today;
+
+  // Auto-fill from share link params and calculate
+  (function () {
+    const p = new URLSearchParams(location.search);
+    const v1 = p.get('p1'), v2 = p.get('p2');
+    if (v1 && v2) {
+      document.getElementById('p1').value = v1;
+      document.getElementById('p2').value = v2;
+      calculate();
+    }
+  })();
+
+  function diff(older, newer) {
+    let y = newer.getFullYear() - older.getFullYear();
+    let mo = newer.getMonth() - older.getMonth();
+    let d = newer.getDate() - older.getDate();
+    if (d < 0) { mo--; d += new Date(newer.getFullYear(), newer.getMonth(), 0).getDate(); }
+    if (mo < 0) { y--; mo += 12; }
+    return { y, mo, d };
+  }
+
+  function plural(n, w) { return `${n} ${w}${n !== 1 ? 's' : ''}`; }
+
+  function verdictText(years) {
+    if (years <= 2)  return '🎉 Almost the same age!';
+    if (years <= 7)  return `✅ A ${years}-year age gap is very common`;
+    if (years <= 15) return '👍 Noticeable but perfectly normal';
+    return '📊 Significant age gap';
+  }
+
+  let _shareText = '';
+
+  function calculate() {
+    const v1 = document.getElementById('p1').value;
+    const v2 = document.getElementById('p2').value;
+    if (!v1 || !v2) { alert('Please enter both dates of birth.'); return; }
+
+    const d1 = new Date(v1 + 'T00:00:00');
+    const d2 = new Date(v2 + 'T00:00:00');
+    const now = new Date();
+    if (d1 > now || d2 > now) { alert('Dates cannot be in the future.'); return; }
+
+    const older = d1 <= d2 ? d1 : d2;
+    const newer = d1 <= d2 ? d2 : d1;
+    const olderLabel = d1 <= d2 ? 'Person 1' : 'Person 2';
+    const newerLabel = d1 <= d2 ? 'Person 2' : 'Person 1';
+
+    const gap = diff(older, newer);
+    const diffStr = `${plural(gap.y,'year')}, ${plural(gap.mo,'month')}, ${plural(gap.d,'day')}`;
+
+    // % of Person 1's life
+    const p1Days  = Math.floor((now - d1) / 86400000);
+    const gapDays = Math.floor((newer - older) / 86400000);
+    const pct = p1Days > 0 ? Math.round(gapDays / p1Days * 100) : 0;
+
+    document.getElementById('diff-main').textContent = `Age difference: ${diffStr}`;
+
+    document.getElementById('diff-notes').innerHTML =
+      `When ${newerLabel} was born, ${olderLabel} was already <strong>${plural(gap.y,'year')} old</strong><br>` +
+      `The age gap is <strong>${pct}%</strong> of Person 1's current age`;
+
+    document.getElementById('verdict').textContent = verdictText(gap.y);
+
+    // Progress bar: gap as % of Person 1's life (capped at 100)
+    const barPct = Math.min(pct, 100);
+    document.getElementById('pct-label').textContent = `Age gap = ${pct}% of Person 1's life`;
+    document.getElementById('pct-bar').style.width = '0';
+    document.getElementById('pct-wrap').style.display = 'block';
+    requestAnimationFrame(() => {
+      document.getElementById('pct-bar').style.width = barPct + '%';
+    });
+
+    // Share link with URL params
+    const url = new URL(location.href);
+    url.searchParams.set('p1', v1);
+    url.searchParams.set('p2', v2);
+    _shareText = url.toString();
+
+    const r = document.getElementById('result');
+    r.classList.remove('show');
+    void r.offsetWidth;
+    r.classList.add('show');
+  }
+
+  function shareResult() {
+    if (!_shareText) return;
+    const btn = document.getElementById('btn-share');
+    navigator.clipboard.writeText(_shareText).then(() => {
+      btn.textContent = '✅ Copied to clipboard!';
+      setTimeout(() => { btn.textContent = '📤 Share Result'; }, 2000);
+    }).catch(() => {
+      // fallback for older browsers
+      const ta = document.createElement('textarea');
+      ta.value = _shareText;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => { btn.textContent = '📤 Share Result'; }, 2000);
+    });
+  }
+</script>
+</body>
+</html>

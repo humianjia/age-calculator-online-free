@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Age Calculator – How Old Am I?</title>
+  <meta name="description" content="Free age calculator online. Find out exactly how old you are in years, months, days, hours and minutes. Plus birthstone, zodiac, planet age, heartbeats and more fun facts!">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    /* ── Section headers ── */
+    .section-title {
+      font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: #94a3b8; margin: 20px 0 10px;
+    }
+
+    /* ── Fun stats (heartbeats etc) ── */
+    .fun-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
+    .fun-stat {
+      background: #faf5ff; border-radius: 10px; padding: 12px 14px;
+      border-left: 3px solid #a78bfa;
+    }
+    .fun-stat-val { font-size: 1rem; font-weight: 700; color: #7c3aed; line-height: 1.2; }
+    .fun-stat-lbl { font-size: 11px; color: #64748b; margin-top: 3px; }
+
+    /* ── Planet ages ── */
+    .planets { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 4px; }
+    @media (max-width: 480px) { .planets { grid-template-columns: repeat(2,1fr); } }
+    .planet {
+      background: #fff7ed; border-radius: 10px; padding: 10px 8px;
+      text-align: center; border-bottom: 3px solid #fb923c;
+    }
+    .planet-emoji { font-size: 1.4rem; line-height: 1; }
+    .planet-val { font-size: .95rem; font-weight: 700; color: #c2410c; margin-top: 4px; }
+    .planet-lbl { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+
+    /* ── Milestones ── */
+    .milestones-list { display: flex; flex-direction: column; gap: 8px; }
+    .milestone-item {
+      display: flex; align-items: center; gap: 12px;
+      background: #f8fafc; border-radius: 10px; padding: 10px 14px;
+      border-left: 3px solid #e2e8f0;
+    }
+    .milestone-item.next { border-left-color: #6366f1; background: #f5f3ff; }
+    .milestone-icon { font-size: 1.2rem; flex-shrink: 0; }
+    .milestone-text { flex: 1; font-size: 13px; color: #475569; }
+    .milestone-text strong { color: #4f46e5; }
+    .milestone-badge {
+      font-size: 11px; font-weight: 700; padding: 2px 8px;
+      border-radius: 20px; background: #ede9fe; color: #7c3aed; white-space: nowrap;
+    }
+    .milestone-badge.done { background: #f1f5f9; color: #94a3b8; }
+
+    /* ── Birthstone & moon ── */
+    .identity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .id-card {
+      background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px;
+      padding: 14px; text-align: center;
+    }
+    .id-card-icon { font-size: 2rem; margin-bottom: 6px; }
+    .id-card-val { font-size: .95rem; font-weight: 700; color: #1e293b; }
+    .id-card-lbl { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+
+    /* ── Lucky number ── */
+    .lucky-wrap {
+      display: flex; align-items: center; gap: 16px;
+      background: linear-gradient(135deg,#6366f1,#8b5cf6);
+      border-radius: 12px; padding: 16px 20px; color: #fff;
+    }
+    .lucky-num { font-size: 3rem; font-weight: 800; line-height: 1; }
+    .lucky-text { font-size: 13px; opacity: .85; line-height: 1.6; }
+    .lucky-text strong { opacity: 1; font-size: 14px; }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <nav class="nav">
+    <a href="index.html" class="active">🎂 Age</a>
+    <a href="age-difference.html">↔ Difference</a>
+    <a href="birthday-countdown.html">⏳ Countdown</a>
+    <a href="date-calculator.html">📅 Date Calc</a>
+    <a href="day-of-week.html">📆 Day of Week</a>
+    <a href="life-progress.html">🌱 Life Progress</a>
+  </nav>
+
+  <div class="badge">Free Tool</div>
+  <h1>Free Age Calculator<br>How Old Am I?</h1>
+  <p class="subtitle">Your age, zodiac, birthstone, planet age, heartbeats & more</p>
+  <p class="trust">Free • No Sign Up • Instant Results</p>
+
+  <div class="card">
+    <div class="field">
+      <label for="dob">Enter your date of birth</label>
+      <input type="date" lang="en" id="dob">
+    </div>
+    <button class="btn" onclick="calculate()">Calculate My Age</button>
+    <p class="hint">Results appear instantly below ↓</p>
+  </div>
+
+  <div class="card result" id="result">
+
+    <!-- Main age -->
+    <div class="result-main" id="main-text"></div>
+
+    <!-- Time stats -->
+    <div class="section-title">⏱ Time Lived</div>
+    <div class="stats">
+      <div class="stat"><div class="stat-val" id="s-days"></div><div class="stat-lbl">📅 Total days</div></div>
+      <div class="stat"><div class="stat-val" id="s-weeks"></div><div class="stat-lbl">📆 Weeks</div></div>
+      <div class="stat"><div class="stat-val" id="s-hours"></div><div class="stat-lbl">⏰ Hours</div></div>
+      <div class="stat"><div class="stat-val" id="s-mins"></div><div class="stat-lbl">⏱️ Minutes</div></div>
+    </div>
+
+    <!-- Fun body stats -->
+    <div class="section-title">💓 Your Body in Numbers</div>
+    <div class="fun-stats">
+      <div class="fun-stat"><div class="fun-stat-val" id="f-heartbeats"></div><div class="fun-stat-lbl">💓 Heartbeats</div></div>
+      <div class="fun-stat"><div class="fun-stat-val" id="f-breaths"></div><div class="fun-stat-lbl">🫁 Breaths taken</div></div>
+      <div class="fun-stat"><div class="fun-stat-val" id="f-blinks"></div><div class="fun-stat-lbl">👁️ Eye blinks</div></div>
+      <div class="fun-stat"><div class="fun-stat-val" id="f-sleep"></div><div class="fun-stat-lbl">😴 Days asleep</div></div>
+    </div>
+
+    <!-- Planet ages -->
+    <div class="section-title">🪐 Your Age on Other Planets</div>
+    <div class="planets" id="planets"></div>
+
+    <!-- Milestones -->
+    <div class="section-title">🏆 Milestones</div>
+    <div class="milestones-list" id="milestones"></div>
+
+    <!-- Identity: zodiac, birthstone, moon, lucky -->
+    <div class="section-title">✨ Your Birthday Identity</div>
+    <div class="identity-grid" style="margin-bottom:12px">
+      <div class="id-card"><div class="id-card-icon" id="id-wzodiac-icon"></div><div class="id-card-val" id="id-wzodiac"></div><div class="id-card-lbl">Western Zodiac</div></div>
+      <div class="id-card"><div class="id-card-icon" id="id-czodiac-icon"></div><div class="id-card-val" id="id-czodiac"></div><div class="id-card-lbl">Chinese Zodiac</div></div>
+      <div class="id-card"><div class="id-card-icon" id="id-stone-icon"></div><div class="id-card-val" id="id-stone"></div><div class="id-card-lbl">Birthstone</div></div>
+      <div class="id-card"><div class="id-card-icon" id="id-moon-icon"></div><div class="id-card-val" id="id-moon"></div><div class="id-card-lbl">Moon Phase at Birth</div></div>
+    </div>
+
+    <!-- Lucky number -->
+    <div class="lucky-wrap">
+      <div class="lucky-num" id="lucky-num"></div>
+      <div class="lucky-text"><strong>Your Life Path Number</strong><br id="lucky-desc"></div>
+    </div>
+
+    <!-- Birthday + next -->
+    <div class="section-title">🎂 Birthday</div>
+    <div class="extra" id="extra"></div>
+
+  </div>
+
+  <div class="seo">
+    <h2>About This Free Age Calculator</h2>
+    <p>This age calculator online free tool tells you exactly how old you are — down to the day, hour, and minute. But it goes further: discover your birthstone, Western and Chinese zodiac, moon phase at birth, life path number, how many heartbeats your heart has made, and even how old you'd be on Mars. Enter your birthday and explore everything about your birth date.</p>
+  </div>
+
+</div>
+<script>
+  document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+
+  // ── Data tables ──────────────────────────────────────────────
+  const W_ZODIAC = [
+    ['Capricorn','♑'],['Aquarius','♒'],['Pisces','♓'],['Aries','♈'],
+    ['Taurus','♉'],['Gemini','♊'],['Cancer','♋'],['Leo','♌'],
+    ['Virgo','♍'],['Libra','♎'],['Scorpio','♏'],['Sagittarius','♐']
+  ];
+  const ZODIAC_CUTS = [20,19,20,20,21,21,23,23,23,23,22,22];
+
+  const C_ZODIAC = [
+    ['Rat','🐀'],['Ox','🐂'],['Tiger','🐯'],['Rabbit','🐰'],['Dragon','🐉'],['Snake','🐍'],
+    ['Horse','🐴'],['Goat','🐑'],['Monkey','🐒'],['Rooster','🐓'],['Dog','🐕'],['Pig','🐷']
+  ];
+
+  const BIRTHSTONES = [
+    ['Garnet','🔴'],['Amethyst','💜'],['Aquamarine','🔵'],['Diamond','💎'],
+    ['Emerald','💚'],['Pearl','⚪'],['Ruby','❤️'],['Peridot','🟢'],
+    ['Sapphire','🔷'],['Opal','🌈'],['Topaz','🟡'],['Turquoise','🩵']
+  ];
+
+  // Planet orbital periods in Earth days
+  const PLANETS = [
+    {name:'Mercury', emoji:'☿', period:87.97},
+    {name:'Venus',   emoji:'♀', period:224.7},
+    {name:'Mars',    emoji:'♂', period:686.97},
+    {name:'Jupiter', emoji:'♃', period:4332.59},
+    {name:'Saturn',  emoji:'♄', period:10759.22},
+    {name:'Uranus',  emoji:'⛢', period:30688.5},
+    {name:'Neptune', emoji:'♆', period:60182},
+    {name:'Moon',    emoji:'🌙', period:27.32},
+  ];
+
+  const MOON_PHASES = ['🌑 New Moon','🌒 Waxing Crescent','🌓 First Quarter','🌔 Waxing Gibbous',
+                       '🌕 Full Moon','🌖 Waning Gibbous','🌗 Last Quarter','🌘 Waning Crescent'];
+
+  const LIFE_PATH_DESC = {
+    1:'The Leader — independent, ambitious, pioneering',
+    2:'The Peacemaker — cooperative, sensitive, diplomatic',
+    3:'The Creator — expressive, social, optimistic',
+    4:'The Builder — practical, disciplined, reliable',
+    5:'The Adventurer — freedom-loving, curious, versatile',
+    6:'The Nurturer — caring, responsible, harmonious',
+    7:'The Seeker — analytical, introspective, spiritual',
+    8:'The Achiever — powerful, goal-oriented, successful',
+    9:'The Humanitarian — compassionate, generous, idealistic',
+    11:'The Visionary — intuitive, inspiring, enlightened',
+    22:'The Master Builder — visionary, practical, transformative',
+    33:'The Master Teacher — nurturing, selfless, uplifting'
+  };
+
+  // ── Helpers ──────────────────────────────────────────────────
+  function fmt(n) { return Math.round(n).toLocaleString(); }
+  function plural(n, w) { return `${n} ${w}${n !== 1 ? 's' : ''}`; }
+
+  function westernZodiac(m, d) {
+    const i = m - 1;
+    return d < ZODIAC_CUTS[i] ? W_ZODIAC[i === 0 ? 11 : i - 1] : W_ZODIAC[i];
+  }
+
+  function chineseZodiac(year) {
+    return C_ZODIAC[((year - 1900) % 12 + 12) % 12];
+  }
+
+  function moonPhase(date) {
+    // Approximate moon phase using known new moon reference (Jan 6 2000)
+    const ref = new Date('2000-01-06T00:00:00');
+    const days = (date - ref) / 86400000;
+    const cycle = ((days % 29.53) + 29.53) % 29.53;
+    return MOON_PHASES[Math.floor(cycle / (29.53 / 8))];
+  }
+
+  function lifePathNumber(dateStr) {
+    // Sum all digits of YYYYMMDD until single digit (or 11/22/33)
+    let sum = dateStr.replace(/-/g,'').split('').reduce((a,c) => a + parseInt(c), 0);
+    while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
+      sum = String(sum).split('').reduce((a,c) => a + parseInt(c), 0);
+    }
+    return sum;
+  }
+
+  // ── Main calculate ────────────────────────────────────────────
+  function calculate() {
+    const val = document.getElementById('dob').value;
+    if (!val) { alert('Please enter your date of birth.'); return; }
+
+    const dob = new Date(val + 'T00:00:00');
+    const now = new Date();
+    if (dob > now) { alert('Date of birth cannot be in the future.'); return; }
+
+    const ms = now - dob;
+    const totalDays  = Math.floor(ms / 86400000);
+    const totalWeeks = Math.floor(totalDays / 7);
+    const totalHours = Math.floor(ms / 3600000);
+    const totalMins  = Math.floor(ms / 60000);
+
+    // Exact age
+    let y = now.getFullYear() - dob.getFullYear();
+    let mo = now.getMonth() - dob.getMonth();
+    let d = now.getDate() - dob.getDate();
+    if (d < 0) { mo--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
+    if (mo < 0) { y--; mo += 12; }
+
+    // ── Main text
+    document.getElementById('main-text').textContent =
+      `You are ${plural(y,'year')}, ${plural(mo,'month')}, ${plural(d,'day')} old`;
+
+    // ── Time stats
+    document.getElementById('s-days').textContent  = fmt(totalDays);
+    document.getElementById('s-weeks').textContent = fmt(totalWeeks);
+    document.getElementById('s-hours').textContent = fmt(totalHours);
+    document.getElementById('s-mins').textContent  = fmt(totalMins);
+
+    // ── Body stats
+    document.getElementById('f-heartbeats').textContent = fmt(totalMins * 70);      // ~70 bpm
+    document.getElementById('f-breaths').textContent    = fmt(totalMins * 15);      // ~15 breaths/min
+    document.getElementById('f-blinks').textContent     = fmt(totalHours * 900);    // ~15/min = 900/hr
+    document.getElementById('f-sleep').textContent      = fmt(totalDays * 0.33);    // ~8h/day
+
+    // ── Planet ages
+    const planetHTML = PLANETS.map(p => {
+      const age = (totalDays / p.period).toFixed(1);
+      return `<div class="planet">
+        <div class="planet-emoji">${p.emoji}</div>
+        <div class="planet-val">${age}</div>
+        <div class="planet-lbl">${p.name}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('planets').innerHTML = planetHTML;
+
+    // ── Milestones (days-based)
+    const MILESTONES = [
+      {days:1000,  label:'1,000 days old',  icon:'🎯'},
+      {days:5000,  label:'5,000 days old',  icon:'⭐'},
+      {days:10000, label:'10,000 days old', icon:'🏆'},
+      {days:15000, label:'15,000 days old', icon:'💎'},
+      {days:20000, label:'20,000 days old', icon:'👑'},
+      {days:25000, label:'25,000 days old', icon:'🌟'},
+      {days:30000, label:'30,000 days old', icon:'🚀'},
+    ];
+    let foundNext = false;
+    const msHTML = MILESTONES.map(m => {
+      const done = totalDays >= m.days;
+      const isNext = !done && !foundNext;
+      if (isNext) foundNext = true;
+      const daysLeft = m.days - totalDays;
+      const dateReached = new Date(dob.getTime() + m.days * 86400000);
+      const dateStr = dateReached.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+      return `<div class="milestone-item ${isNext ? 'next' : ''}">
+        <div class="milestone-icon">${m.icon}</div>
+        <div class="milestone-text">
+          <strong>${m.label}</strong><br>
+          <span style="font-size:12px">${done ? `Reached on ${dateStr}` : `In ${daysLeft.toLocaleString()} days — ${dateStr}`}</span>
+        </div>
+        <div class="milestone-badge ${done ? 'done' : ''}">${done ? '✅ Done' : isNext ? '⏳ Next' : ''}</div>
+      </div>`;
+    }).join('');
+    document.getElementById('milestones').innerHTML = msHTML;
+
+    // ── Identity
+    const [wSign, wEmoji] = westernZodiac(dob.getMonth() + 1, dob.getDate());
+    const [cSign, cEmoji] = chineseZodiac(dob.getFullYear());
+    const [stone, stoneEmoji] = BIRTHSTONES[dob.getMonth()];
+    const moon = moonPhase(dob);
+    const moonEmoji = moon.split(' ')[0];
+    const moonName  = moon.split(' ').slice(1).join(' ');
+
+    document.getElementById('id-wzodiac-icon').textContent = wEmoji;
+    document.getElementById('id-wzodiac').textContent = wSign;
+    document.getElementById('id-czodiac-icon').textContent = cEmoji;
+    document.getElementById('id-czodiac').textContent = cSign;
+    document.getElementById('id-stone-icon').textContent = stoneEmoji;
+    document.getElementById('id-stone').textContent = stone;
+    document.getElementById('id-moon-icon').textContent = moonEmoji;
+    document.getElementById('id-moon').textContent = moonName;
+
+    // ── Lucky / Life Path number (rendered by setLuckyDesc after result shown)
+
+    // ── Next birthday
+    let nextBday = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
+    if (nextBday <= now) nextBday.setFullYear(now.getFullYear() + 1);
+    const daysUntil = Math.ceil((nextBday - now) / 86400000);
+    const bdayStr = nextBday.toLocaleDateString('en-US', { month:'long', day:'numeric' });
+    const bdayDow = nextBday.toLocaleDateString('en-US', { weekday:'long' });
+
+    document.getElementById('extra').innerHTML =
+      `🎂 Next birthday in <strong>${daysUntil} days</strong> — ${bdayDow}, ${bdayStr}`;
+
+    const r = document.getElementById('result');
+    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
+  }
+
+  // Fix lucky number description rendering
+  function setLuckyDesc(val) {
+    const lpn = lifePathNumber(val);
+    const desc = LIFE_PATH_DESC[lpn] || 'A unique and powerful number';
+    const lw = document.querySelector('.lucky-text');
+    lw.innerHTML = `<strong>Life Path Number</strong><br>${desc}`;
+  }
+
+  // Patch calculate to call setLuckyDesc
+  const _orig = calculate;
+  window.calculate = function() {
+    _orig();
+    const val = document.getElementById('dob').value;
+    if (val) setLuckyDesc(val);
+  };
+
+  document.getElementById('dob').addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
+</script>
+</body>
+</html>

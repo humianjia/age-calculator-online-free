@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life Progress Bar – How Much of Your Life Has Passed?</title>
+  <meta name="description" content="See your life as a progress bar. Find out what percentage of your life has passed, how many weeks you've lived, and how many remain. Free, instant, no sign-up.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    .life-bar-wrap { margin: 20px 0; }
+    .life-bar-label { display: flex; justify-content: space-between; font-size: 13px; color: #64748b; margin-bottom: 8px; }
+    .life-bar-track { background: #e2e8f0; border-radius: 99px; height: 20px; overflow: hidden; }
+    .life-bar-fill  { height: 100%; border-radius: 99px;
+                      background: linear-gradient(90deg, #6366f1, #8b5cf6);
+                      transition: width .8s cubic-bezier(.4,0,.2,1); }
+    .life-pct { text-align: center; font-size: clamp(2rem,8vw,3.5rem); font-weight: 800;
+                background: linear-gradient(135deg,#6366f1,#8b5cf6);
+                -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+                margin: 8px 0 4px; }
+    .life-sub { text-align: center; font-size: 13px; color: #64748b; margin-bottom: 20px; }
+    .weeks-grid { display: grid; gap: 3px; margin: 16px 0; }
+    .weeks-grid .wrow { display: flex; gap: 3px; }
+    .wk { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+    .wk.lived { background: #6366f1; }
+    .wk.left  { background: #e2e8f0; }
+    .grid-note { font-size: 11px; color: #94a3b8; text-align: center; margin-bottom: 16px; }
+    .milestones { font-size: 14px; color: #475569; line-height: 2.1; }
+    .milestones strong { color: #4f46e5; }
+    .milestone-done { color: #94a3b8; text-decoration: line-through; }
+    .section-title { font-size: 11px; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 1px; color: #94a3b8; margin: 20px 0 10px; }
+    .events-list { display: flex; flex-direction: column; gap: 8px; }
+    .event-item { display: flex; gap: 12px; align-items: flex-start;
+      background: #f8fafc; border-radius: 10px; padding: 10px 14px; }
+    .event-icon { font-size: 1.2rem; flex-shrink: 0; margin-top: 1px; }
+    .event-text { font-size: 13px; color: #475569; line-height: 1.5; }
+    .event-text strong { color: #1e293b; }
+    .life-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .ls-item { background: #f0fdf4; border-radius: 10px; padding: 12px 14px; border-left: 3px solid #22c55e; }
+    .ls-val { font-size: 1rem; font-weight: 700; color: #15803d; }
+    .ls-lbl { font-size: 11px; color: #64748b; margin-top: 3px; }
+  </style>
+</head>
+<body>
+<div class="page">
+  <nav class="nav">
+    <a href="index.html">🎂 Age</a>
+    <a href="age-difference.html">↔ Difference</a>
+    <a href="birthday-countdown.html">⏳ Countdown</a>
+    <a href="date-calculator.html">📅 Date Calc</a>
+    <a href="day-of-week.html">📆 Day of Week</a>
+    <a href="life-progress.html" class="active">🌱 Life Progress</a>
+  </nav>
+
+  <div class="badge">Free Tool</div>
+  <h1>Life Progress Bar</h1>
+  <p class="subtitle">See how much of your life has passed — and what's ahead</p>
+  <p class="trust">Free • No Sign Up • A Little Existential 😄</p>
+
+  <div class="card">
+    <div class="two-col">
+      <div class="field">
+        <label for="dob">Your date of birth</label>
+        <input type="date" lang="en" id="dob">
+      </div>
+      <div class="field">
+        <label for="lifespan">Expected lifespan (years)</label>
+        <input type="number" id="lifespan" value="80" min="1" max="130"
+          style="width:100%;padding:12px 16px;border:2px solid #e2e8f0;border-radius:10px;font-size:16px;outline:none;transition:border-color .2s;background:#f8fafc"
+          onfocus="this.style.borderColor='#6366f1';this.style.background='#fff'"
+          onblur="this.style.borderColor='#e2e8f0';this.style.background='#f8fafc'">
+      </div>
+    </div>
+    <button class="btn" onclick="calculate()">Show My Life Progress</button>
+  </div>
+
+  <div class="card result" id="result">
+    <div class="life-pct" id="pct-text"></div>
+    <div class="life-sub" id="pct-sub"></div>
+
+    <div class="life-bar-wrap">
+      <div class="life-bar-label">
+        <span>Birth</span><span id="bar-mid"></span><span id="bar-end"></span>
+      </div>
+      <div class="life-bar-track">
+        <div class="life-bar-fill" id="life-bar" style="width:0"></div>
+      </div>
+    </div>
+
+    <div class="weeks-grid" id="weeks-grid"></div>
+    <div class="grid-note">Each square = 1 week of your life &nbsp;■ lived &nbsp;□ remaining</div>
+
+    <div class="section-title">🌍 The World When You Were Born</div>
+    <div class="events-list" id="events-list"></div>
+
+    <div class="section-title">📊 Fun Life Stats</div>
+    <div class="life-stats-grid" id="life-stats"></div>
+
+    <div class="section-title">🏁 Age Milestones</div>
+    <div class="milestones" id="milestones"></div>
+  </div>
+
+  <div class="seo">
+    <h2>About This Life Progress Bar</h2>
+    <p>This life progress bar shows what percentage of your life has passed based on your birthday and an expected lifespan. Each tiny square represents one week — a powerful visual reminder of how precious time is. Use it as motivation to make the most of the weeks ahead.</p>
+  </div>
+</div>
+<script>
+  document.getElementById('dob').max = new Date().toISOString().split('T')[0];
+
+  const MILESTONES = [18, 21, 30, 40, 50, 60, 65, 70, 80, 90, 100];
+
+  // World events by year (1950–2026)
+  const WORLD_EVENTS = {
+    1950:['🇰🇷 Korean War began','📺 Color TV introduced in the US'],
+    1955:['🚌 Rosa Parks refused to give up her bus seat','💉 Polio vaccine declared safe'],
+    1960:['🛰️ First weather satellite launched','🎬 Psycho released by Hitchcock'],
+    1961:['🚀 Yuri Gagarin became first human in space','🧱 Berlin Wall construction began'],
+    1963:['🕊️ Martin Luther King Jr. gave "I Have a Dream" speech','🎙️ JFK assassinated'],
+    1965:['🌍 First spacewalk by Alexei Leonov','🎵 The Beatles toured the US'],
+    1969:['🌕 Apollo 11 landed on the Moon','🎸 Woodstock festival held'],
+    1970:['🌱 First Earth Day celebrated','💾 Floppy disk invented'],
+    1971:['🎮 Atari founded','📧 First email sent'],
+    1972:['🏓 Nixon visited China','🎬 The Godfather released'],
+    1973:['📱 First mobile phone call made','🛢️ Oil crisis began'],
+    1975:['🖥️ Microsoft founded by Bill Gates','🎬 Jaws became first summer blockbuster'],
+    1976:['🍎 Apple Computer founded','🛸 Viking 1 landed on Mars'],
+    1977:['🌌 Star Wars released','🎵 Elvis Presley died'],
+    1978:['👶 First test-tube baby born','🕹️ Space Invaders released'],
+    1979:['📼 Walkman introduced by Sony','🌋 Mount St. Helens erupted'],
+    1980:['🎮 Pac-Man released','🎵 John Lennon shot'],
+    1981:['💻 IBM PC launched','🚀 Space Shuttle first flight'],
+    1982:['💿 CD player introduced','🎬 E.T. the Extra-Terrestrial released'],
+    1983:['📱 Motorola DynaTAC first commercial cell phone','🌐 Internet (TCP/IP) officially launched'],
+    1984:['🖥️ Apple Macintosh launched','🎮 Tetris created'],
+    1985:['🎵 Live Aid concert raised $125M','🧬 DNA fingerprinting invented'],
+    1986:['☢️ Chernobyl nuclear disaster','🚀 Space Shuttle Challenger disaster'],
+    1987:['📈 Black Monday stock market crash','🎬 Full Metal Jacket released'],
+    1988:['🖥️ First computer worm (Morris Worm) spread','🏅 Seoul Olympics held'],
+    1989:['🧱 Berlin Wall fell','🌐 World Wide Web invented by Tim Berners-Lee'],
+    1990:['🌍 Nelson Mandela released from prison','🔭 Hubble Space Telescope launched'],
+    1991:['🇷🇺 Soviet Union dissolved','🎵 Nirvana released Nevermind'],
+    1992:['🌐 First website went live','🏅 Barcelona Olympics held'],
+    1993:['🖥️ Windows NT 3.1 released','🎬 Jurassic Park released'],
+    1994:['🌐 Amazon and Yahoo founded','🎵 Kurt Cobain died'],
+    1995:['🌐 eBay and Craigslist founded','🎬 Toy Story — first Pixar film'],
+    1996:['🐑 Dolly the sheep cloned','🎮 Nintendo 64 launched'],
+    1997:['🚀 Mars Pathfinder landed on Mars','🎬 Titanic became highest-grossing film'],
+    1998:['🌐 Google founded','💊 Viagra approved by FDA'],
+    1999:['🌐 Napster launched','🎬 The Matrix released'],
+    2000:['🌐 Y2K bug feared worldwide','🎮 PlayStation 2 launched'],
+    2001:['💔 9/11 attacks in New York','🎵 iPod launched by Apple'],
+    2002:['💶 Euro coins and notes introduced','🎬 Spider-Man became box office hit'],
+    2003:['🧬 Human Genome Project completed','🚀 Space Shuttle Columbia disaster'],
+    2004:['🌐 Facebook founded','🌊 Indian Ocean tsunami killed 230,000'],
+    2005:['🎵 YouTube founded','🌀 Hurricane Katrina devastated New Orleans'],
+    2006:['🐦 Twitter launched','🪐 Pluto reclassified as dwarf planet'],
+    2007:['📱 First iPhone released','🌐 Netflix began streaming'],
+    2008:['💰 Global financial crisis','🏅 Beijing Olympics held'],
+    2009:['🌐 Bitcoin created','🎵 Michael Jackson died'],
+    2010:['🌐 Instagram launched','🛢️ Deepwater Horizon oil spill'],
+    2011:['🌐 Snapchat launched','🕌 Osama bin Laden killed'],
+    2012:['🚀 SpaceX Dragon docked with ISS','🎬 The Avengers released'],
+    2013:['🤳 Selfie named word of the year','🌐 Edward Snowden leaked NSA documents'],
+    2014:['🌐 Ice Bucket Challenge went viral','🛸 Rosetta spacecraft landed on a comet'],
+    2015:['🌍 Paris Climate Agreement signed','🎮 Minecraft sold 100M copies'],
+    2016:['🤖 AlphaGo defeated world Go champion','🎵 David Bowie and Prince died'],
+    2017:['🌐 #MeToo movement went viral','🚀 SpaceX Falcon Heavy first launch'],
+    2018:['🤖 AI assistants became mainstream','🌍 Greta Thunberg started climate strikes'],
+    2019:['📸 First black hole image captured','🎬 Avengers: Endgame broke box office records'],
+    2020:['🦠 COVID-19 pandemic began','🚀 SpaceX launched astronauts to ISS'],
+    2021:['💉 COVID vaccines rolled out globally','🔭 James Webb Space Telescope launched'],
+    2022:['🇺🇦 Russia invaded Ukraine','🤖 ChatGPT launched by OpenAI'],
+    2023:['🤖 AI revolution accelerated','🎬 Barbie and Oppenheimer dominated box office'],
+    2024:['🗳️ Record number of global elections','🤖 AI became mainstream in daily life'],
+    2025:['🚀 Commercial space tourism expanded','🤖 AI agents became widely deployed'],
+    2026:['🌐 AI reshaping every industry','🏅 World Cup preparations underway'],
+  };
+
+  function getEvents(year) {
+    // Find closest year in data
+    const years = Object.keys(WORLD_EVENTS).map(Number);
+    const closest = years.reduce((a, b) => Math.abs(b - year) < Math.abs(a - year) ? b : a);
+    return WORLD_EVENTS[closest] || [];
+  }
+
+  function calculate() {
+    const val = document.getElementById('dob').value;
+    const lifespan = parseInt(document.getElementById('lifespan').value) || 80;
+    if (!val) { alert('Please enter your date of birth.'); return; }
+
+    const dob = new Date(val + 'T00:00:00');
+    const now = new Date();
+    if (dob > now) { alert('Date of birth cannot be in the future.'); return; }
+
+    const totalMs    = lifespan * 365.25 * 86400000;
+    const livedMs    = now - dob;
+    const pct        = Math.min(livedMs / totalMs * 100, 100);
+    const livedWeeks = Math.floor(livedMs / (7 * 86400000));
+    const totalWeeks = Math.floor(lifespan * 52.18);
+    const totalDays  = Math.floor(livedMs / 86400000);
+    const totalMins  = Math.floor(livedMs / 60000);
+    const endYear    = dob.getFullYear() + lifespan;
+
+    document.getElementById('pct-text').textContent = pct.toFixed(1) + '%';
+    document.getElementById('pct-sub').textContent =
+      `of your life has passed (based on ${lifespan}-year lifespan)`;
+    document.getElementById('bar-mid').textContent = `Now (${pct.toFixed(0)}%)`;
+    document.getElementById('bar-end').textContent = endYear;
+
+    requestAnimationFrame(() => {
+      document.getElementById('life-bar').style.width = pct.toFixed(2) + '%';
+    });
+
+    // Weeks grid
+    const COLS = 52;
+    const grid = document.getElementById('weeks-grid');
+    grid.innerHTML = '';
+    const renderWeeks = Math.min(totalWeeks, 4160);
+    const renderRows  = Math.ceil(renderWeeks / COLS);
+    for (let r = 0; r < renderRows; r++) {
+      const row = document.createElement('div');
+      row.className = 'wrow';
+      for (let c = 0; c < COLS; c++) {
+        const idx = r * COLS + c;
+        if (idx >= renderWeeks) break;
+        const sq = document.createElement('div');
+        sq.className = 'wk ' + (idx < livedWeeks ? 'lived' : 'left');
+        row.appendChild(sq);
+      }
+      grid.appendChild(row);
+    }
+
+    // World events in birth year
+    const birthYear = dob.getFullYear();
+    const events = getEvents(birthYear);
+    const eventsHTML = events.map(e => {
+      const parts = e.split(' ');
+      const icon = parts[0];
+      const text = parts.slice(1).join(' ');
+      return `<div class="event-item"><div class="event-icon">${icon}</div><div class="event-text"><strong>${birthYear}:</strong> ${text}</div></div>`;
+    }).join('');
+    document.getElementById('events-list').innerHTML = eventsHTML ||
+      `<div class="event-item"><div class="event-icon">📅</div><div class="event-text">You were born in <strong>${birthYear}</strong> — a year full of history!</div></div>`;
+
+    // Fun life stats
+    const currentAge = livedMs / (365.25 * 86400000);
+    const sleepYears = (currentAge * 0.33).toFixed(1);
+    const mealsEaten = Math.round(totalDays * 3);
+    const stepsWalked = Math.round(totalDays * 8000);
+    const wordsSpoken = Math.round(totalDays * 16000);
+    document.getElementById('life-stats').innerHTML = `
+      <div class="ls-item"><div class="ls-val">${sleepYears} yrs</div><div class="ls-lbl">😴 Spent sleeping</div></div>
+      <div class="ls-item"><div class="ls-val">${mealsEaten.toLocaleString()}</div><div class="ls-lbl">🍽️ Meals eaten</div></div>
+      <div class="ls-item"><div class="ls-val">${(stepsWalked/1e6).toFixed(1)}M</div><div class="ls-lbl">👟 Steps walked</div></div>
+      <div class="ls-item"><div class="ls-val">${(wordsSpoken/1e6).toFixed(0)}M</div><div class="ls-lbl">💬 Words spoken</div></div>
+    `;
+
+    // Age milestones
+    const lines = MILESTONES
+      .filter(m => m <= lifespan)
+      .map(m => {
+        const done = currentAge >= m;
+        const cls  = done ? 'milestone-done' : '';
+        const icon = done ? '✅' : '⏳';
+        return `<span class="${cls}">${icon} Age <strong>${m}</strong> — ${done ? 'reached' : 'in ~' + Math.round(m - currentAge) + ' years'}</span>`;
+      });
+    document.getElementById('milestones').innerHTML = lines.join('<br>');
+
+    const r = document.getElementById('result');
+    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
+  }
+</script>
+</body>
+</html>
