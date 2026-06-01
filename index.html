@@ -9,418 +9,723 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
   <link rel="stylesheet" href="styles.css">
   <style>
-    /* ── Section headers ── */
-    .section-title {
-      font-size: 11px; font-weight: 700; text-transform: uppercase;
-      letter-spacing: 1px; color: #94a3b8; margin: 20px 0 10px;
+    :root {
+      color-scheme: light;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: #0f172a;
+      background: #f8fafc;
     }
 
-    /* ── Fun stats (heartbeats etc) ── */
-    .fun-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
-    .fun-stat {
-      background: #faf5ff; border-radius: 10px; padding: 12px 14px;
-      border-left: 3px solid #a78bfa;
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, rgba(99,102,241,.12), transparent 28%),
+                  radial-gradient(circle at left bottom, rgba(59,130,246,.08), transparent 28%),
+                  #f8fafc;
     }
-    .fun-stat-val { font-size: 1rem; font-weight: 700; color: #7c3aed; line-height: 1.2; }
-    .fun-stat-lbl { font-size: 11px; color: #64748b; margin-top: 3px; }
 
-    /* ── Planet ages ── */
-    .planets { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom: 4px; }
-    @media (max-width: 480px) { .planets { grid-template-columns: repeat(2,1fr); } }
-    .planet {
-      background: #fff7ed; border-radius: 10px; padding: 10px 8px;
-      text-align: center; border-bottom: 3px solid #fb923c;
-    }
-    .planet-emoji { font-size: 1.4rem; line-height: 1; }
-    .planet-val { font-size: .95rem; font-weight: 700; color: #c2410c; margin-top: 4px; }
-    .planet-lbl { font-size: 10px; color: #94a3b8; margin-top: 2px; }
+    a { color: inherit; text-decoration: none; }
+    button { font: inherit; }
 
-    /* ── Milestones ── */
-    .milestones-list { display: flex; flex-direction: column; gap: 8px; }
-    .milestone-item {
-      display: flex; align-items: center; gap: 12px;
-      background: #f8fafc; border-radius: 10px; padding: 10px 14px;
-      border-left: 3px solid #e2e8f0;
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 20px 0 40px;
     }
-    .milestone-item.next { border-left-color: #6366f1; background: #f5f3ff; }
-    .milestone-icon { font-size: 1.2rem; flex-shrink: 0; }
-    .milestone-text { flex: 1; font-size: 13px; color: #475569; }
-    .milestone-text strong { color: #4f46e5; }
-    .milestone-badge {
-      font-size: 11px; font-weight: 700; padding: 2px 8px;
-      border-radius: 20px; background: #ede9fe; color: #7c3aed; white-space: nowrap;
-    }
-    .milestone-badge.done { background: #f1f5f9; color: #94a3b8; }
 
-    /* ── Birthstone & moon ── */
-    .identity-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .id-card {
-      background: #fff; border: 1.5px solid #e2e8f0; border-radius: 12px;
-      padding: 14px; text-align: center;
+    .nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 24px;
+      padding: 0 4px;
+      color: #334155;
+      font-size: 0.95rem;
+      overflow-x: auto;
     }
-    .id-card-icon { font-size: 2rem; margin-bottom: 6px; }
-    .id-card-val { font-size: .95rem; font-weight: 700; color: #1e293b; }
-    .id-card-lbl { font-size: 11px; color: #94a3b8; margin-top: 3px; }
+    .nav a {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.85);
+      border: 1px solid rgba(148,163,184,.22);
+      white-space: nowrap;
+      transition: transform .2s ease, background .2s ease, border-color .2s ease;
+    }
+    .nav a:hover,
+    .nav a.active {
+      background: #eef2ff;
+      border-color: #c7d2fe;
+      transform: translateY(-1px);
+    }
 
-    /* ── Lucky number ── */
-    .lucky-wrap {
-      display: flex; align-items: center; gap: 16px;
-      background: linear-gradient(135deg,#6366f1,#8b5cf6);
-      border-radius: 12px; padding: 16px 20px; color: #fff;
+    .hero {
+      display: grid;
+      gap: 14px;
+      padding: 18px 0 14px;
     }
-    .lucky-num { font-size: 3rem; font-weight: 800; line-height: 1; }
-    .lucky-text { font-size: 13px; opacity: .85; line-height: 1.6; }
-    .lucky-text strong { opacity: 1; font-size: 14px; }
+    .hero .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #eef2ff;
+      color: #4338ca;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      width: fit-content;
+    }
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(2.3rem, 4vw, 3.6rem);
+      line-height: 0.98;
+    }
+    .hero p {
+      margin: 0;
+      max-width: 720px;
+      color: #475569;
+      font-size: 1rem;
+      line-height: 1.8;
+    }
+
+    .card {
+      background: rgba(255,255,255,.97);
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 28px;
+      box-shadow: 0 28px 70px rgba(15,23,42,.08);
+      padding: 26px;
+      margin-bottom: 22px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 10px;
+    }
+    .field label {
+      font-size: 0.95rem;
+      color: #475569;
+      font-weight: 600;
+    }
+    .field input[type="date"] {
+      appearance: none;
+      width: 100%;
+      min-height: 52px;
+      border-radius: 18px;
+      border: 1px solid #cbd5e1;
+      padding: 0 16px;
+      font-size: 1rem;
+      color: #0f172a;
+      background: #fff;
+      transition: border-color .2s ease, box-shadow .2s ease;
+    }
+    .field input[type="date"]:focus {
+      outline: none;
+      border-color: #6366f1;
+      box-shadow: 0 0 0 5px rgba(99,102,241,.12);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+      margin-top: 10px;
+    }
+    .btn,
+    .secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      border: none;
+      border-radius: 16px;
+      padding: 0 22px;
+      cursor: pointer;
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .btn {
+      background: #4338ca;
+      color: #fff;
+      font-weight: 700;
+      box-shadow: 0 14px 30px rgba(67,56,202,.18);
+    }
+    .btn:hover,
+    .secondary-btn:hover {
+      transform: translateY(-1px);
+    }
+    .secondary-btn {
+      background: #f8fafc;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      font-weight: 600;
+    }
+
+    .mode-switch {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 16px;
+    }
+    .mode-switch button {
+      flex: 1;
+      min-width: 140px;
+      background: #fff;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      border-radius: 14px;
+      padding: 12px 16px;
+      font-weight: 700;
+    }
+    .mode-switch button.active {
+      background: #4338ca;
+      border-color: #4338ca;
+      color: #fff;
+    }
+
+    .message {
+      margin-top: 16px;
+      min-height: 24px;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+    .message.error { color: #b91c1c; }
+    .message.success { color: #166534; }
+
+    .result-card {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity .35s ease, transform .35s ease;
+    }
+    .result-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .result-header {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .result-tag {
+      max-width: fit-content;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .result-main {
+      margin: 0;
+      font-size: clamp(2rem, 3vw, 3rem);
+      line-height: 1.05;
+    }
+    .result-sub {
+      margin: 0;
+      color: #475569;
+      font-size: 1rem;
+      line-height: 1.75;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+    .stat-card {
+      background: #f8fafc;
+      border-radius: 20px;
+      padding: 18px;
+      border: 1px solid rgba(148,163,184,.18);
+      display: grid;
+      gap: 8px;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: #0f172a;
+    }
+    .stat-label {
+      font-size: 0.95rem;
+      color: #475569;
+      font-weight: 600;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 24px;
+    }
+    .detail-item {
+      background: #fff;
+      border: 1px solid rgba(148,163,184,.16);
+      border-radius: 18px;
+      padding: 18px;
+      min-height: 96px;
+      display: grid;
+      gap: 10px;
+    }
+    .detail-item strong {
+      font-size: 0.92rem;
+      color: #475569;
+      font-weight: 700;
+    }
+    .detail-item span {
+      color: #0f172a;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 20px;
+    }
+    .section-block {
+      background: #fff;
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 28px;
+      padding: 24px;
+    }
+    .section-block h3 {
+      margin-top: 0;
+      margin-bottom: 14px;
+      font-size: 1.2rem;
+      color: #0f172a;
+    }
+    .section-block p,
+    .section-block li {
+      color: #475569;
+      font-size: 0.97rem;
+      line-height: 1.8;
+    }
+    .section-block ul { padding-left: 20px; margin: 0; }
+    .faq dt {
+      margin-top: 18px;
+      font-weight: 700;
+      color: #0f172a;
+    }
+    .faq dd {
+      margin: 8px 0 0;
+      color: #475569;
+    }
+
+    .related-links {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .related-links a {
+      display: block;
+      padding: 12px 16px;
+      border-radius: 16px;
+      border: 1px solid rgba(148,163,184,.18);
+      background: #f8fafc;
+      color: #334155;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.92rem;
+      color: #64748b;
+      padding-top: 12px;
+    }
+
+    @media (max-width: 880px) {
+      .form-grid,
+      .stats-grid,
+      .detail-grid,
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+      .nav { gap: 8px; }
+      .action-row { justify-content: stretch; }
+    }
+
+    @media (max-width: 580px) {
+      .page { padding: 14px 0 34px; }
+      .card { padding: 20px; }
+      .nav a { padding: 10px 12px; font-size: 0.88rem; }
+      .field label { font-size: 0.92rem; }
+      .btn, .secondary-btn { width: 100%; }
+      .mode-switch button { min-width: unset; }
+    }
   </style>
 </head>
 <body>
-<div class="page">
+  <div class="page">
+    <nav class="nav">
+      <a href="index.html" class="active">🎂 Age</a>
+      <a href="age-difference.html">↔ Difference</a>
+      <a href="birthday-countdown.html">⏳ Countdown</a>
+      <a href="date-calculator.html">📅 Date Calc</a>
+      <a href="day-of-week.html">📆 Day of Week</a>
+      <a href="life-progress.html">🌱 Life Progress</a>
+      <a href="tax-calculator.html">💰 Tax</a>
+      <a href="retirement-calculator.html">🏖️ Retirement</a>
+      <a href="loan-calculator.html">🏦 Loan</a>
+      <a href="college-cost-calculator.html">🎓 College</a>
+      <a href="currency-converter.html">💱 Currency</a>
+      <a href="pension-calculator.html">👴 Pension</a>
+    </nav>
 
-  <nav class="nav">
-    <a href="index.html" class="active">🎂 Age</a>
-    <a href="age-difference.html">↔ Difference</a>
-    <a href="birthday-countdown.html">⏳ Countdown</a>
-    <a href="date-calculator.html">📅 Date Calc</a>
-    <a href="day-of-week.html">📆 Day of Week</a>
-    <a href="life-progress.html">🌱 Life Progress</a>
-    <a href="tax-calculator.html">💰 Tax</a>
-    <a href="retirement-calculator.html">🏖️ Retirement</a>
-    <a href="loan-calculator.html">🏦 Loan</a>
-    <a href="college-cost-calculator.html">🎓 College</a>
-    <a href="currency-converter.html">💱 Currency</a>
-    <a href="pension-calculator.html">👴 Pension</a>
-  </nav>
+    <section class="hero">
+      <div class="eyebrow">Age Calculator Online Free</div>
+      <h1>Free age and date difference calculator</h1>
+      <p>Quickly calculate your exact age, compare any two dates, and see how many days, weeks, hours, and minutes have passed. Includes birthday countdown, zodiac details, and share-ready results.</p>
+    </section>
 
-  <div class="badge">Free Tool</div>
-  <h1>Free Age Calculator Online<br>How Old Am I?</h1>
-  <p class="subtitle">age calculator online free with exact years, months, days, hours and minutes plus zodiac, birthstone, planet age and more</p>
-  <p class="trust">Free • No Sign Up • Instant Results</p>
-
-  <div class="card">
-    <div class="field">
-      <label for="dob">Enter your date of birth</label>
-      <input type="date" lang="en" id="dob">
-    </div>
-    <button class="btn" onclick="calculate()">Calculate My Age</button>
-    <p class="hint">Results appear instantly below ↓</p>
-  </div>
-
-  <div class="card result" id="result">
-
-    <!-- Main age -->
-    <div class="result-main" id="main-text"></div>
-
-    <!-- Time stats -->
-    <div class="section-title">⏱ Time Lived</div>
-    <div class="stats">
-      <div class="stat"><div class="stat-val" id="s-days"></div><div class="stat-lbl">📅 Total days</div></div>
-      <div class="stat"><div class="stat-val" id="s-weeks"></div><div class="stat-lbl">📆 Weeks</div></div>
-      <div class="stat"><div class="stat-val" id="s-hours"></div><div class="stat-lbl">⏰ Hours</div></div>
-      <div class="stat"><div class="stat-val" id="s-mins"></div><div class="stat-lbl">⏱️ Minutes</div></div>
-    </div>
-
-    <!-- Fun body stats -->
-    <div class="section-title">💓 Your Body in Numbers</div>
-    <div class="fun-stats">
-      <div class="fun-stat"><div class="fun-stat-val" id="f-heartbeats"></div><div class="fun-stat-lbl">💓 Heartbeats</div></div>
-      <div class="fun-stat"><div class="fun-stat-val" id="f-breaths"></div><div class="fun-stat-lbl">🫁 Breaths taken</div></div>
-      <div class="fun-stat"><div class="fun-stat-val" id="f-blinks"></div><div class="fun-stat-lbl">👁️ Eye blinks</div></div>
-      <div class="fun-stat"><div class="fun-stat-val" id="f-sleep"></div><div class="fun-stat-lbl">😴 Days asleep</div></div>
-    </div>
-
-    <!-- Planet ages -->
-    <div class="section-title">🪐 Your Age on Other Planets</div>
-    <div class="planets" id="planets"></div>
-
-    <!-- Milestones -->
-    <div class="section-title">🏆 Milestones</div>
-    <div class="milestones-list" id="milestones"></div>
-
-    <!-- Identity: zodiac, birthstone, moon, lucky -->
-    <div class="section-title">✨ Your Birthday Identity</div>
-    <div class="identity-grid" style="margin-bottom:12px">
-      <div class="id-card"><div class="id-card-icon" id="id-wzodiac-icon"></div><div class="id-card-val" id="id-wzodiac"></div><div class="id-card-lbl">Western Zodiac</div></div>
-      <div class="id-card"><div class="id-card-icon" id="id-czodiac-icon"></div><div class="id-card-val" id="id-czodiac"></div><div class="id-card-lbl">Chinese Zodiac</div></div>
-      <div class="id-card"><div class="id-card-icon" id="id-stone-icon"></div><div class="id-card-val" id="id-stone"></div><div class="id-card-lbl">Birthstone</div></div>
-      <div class="id-card"><div class="id-card-icon" id="id-moon-icon"></div><div class="id-card-val" id="id-moon"></div><div class="id-card-lbl">Moon Phase at Birth</div></div>
-    </div>
-
-    <!-- Lucky number -->
-    <div class="lucky-wrap">
-      <div class="lucky-num" id="lucky-num"></div>
-      <div class="lucky-text"><strong>Your Life Path Number</strong><br id="lucky-desc"></div>
-    </div>
-
-    <!-- Birthday + next -->
-    <div class="section-title">🎂 Birthday</div>
-    <div class="extra" id="extra"></div>
-
-  </div>
-
-  <div class="seo">
-    <h2>About This Free Age Calculator Online Free Tool</h2>
-    <p>This age calculator online free tool tells you exactly how old you are — down to the day, hour, and minute. It also reveals your Western zodiac, Chinese zodiac, birthstone, moon phase at birth, life path number, heartbeats count, and your age on other planets. Enter your birthday for instant results from the best age calculator online free.</p>
-  </div>
-
-</div>
-<script>
-  document.getElementById('dob').max = new Date().toISOString().split('T')[0];
-
-  // ── Data tables ──────────────────────────────────────────────
-  const W_ZODIAC = [
-    ['Capricorn','♑'],['Aquarius','♒'],['Pisces','♓'],['Aries','♈'],
-    ['Taurus','♉'],['Gemini','♊'],['Cancer','♋'],['Leo','♌'],
-    ['Virgo','♍'],['Libra','♎'],['Scorpio','♏'],['Sagittarius','♐']
-  ];
-  const ZODIAC_CUTS = [20,19,20,20,21,21,23,23,23,23,22,22];
-
-  const C_ZODIAC = [
-    ['Rat','🐀'],['Ox','🐂'],['Tiger','🐯'],['Rabbit','🐰'],['Dragon','🐉'],['Snake','🐍'],
-    ['Horse','🐴'],['Goat','🐑'],['Monkey','🐒'],['Rooster','🐓'],['Dog','🐕'],['Pig','🐷']
-  ];
-
-  const BIRTHSTONES = [
-    ['Garnet','🔴'],['Amethyst','💜'],['Aquamarine','🔵'],['Diamond','💎'],
-    ['Emerald','💚'],['Pearl','⚪'],['Ruby','❤️'],['Peridot','🟢'],
-    ['Sapphire','🔷'],['Opal','🌈'],['Topaz','🟡'],['Turquoise','🩵']
-  ];
-
-  // Planet orbital periods in Earth days
-  const PLANETS = [
-    {name:'Mercury', emoji:'☿', period:87.97},
-    {name:'Venus',   emoji:'♀', period:224.7},
-    {name:'Mars',    emoji:'♂', period:686.97},
-    {name:'Jupiter', emoji:'♃', period:4332.59},
-    {name:'Saturn',  emoji:'♄', period:10759.22},
-    {name:'Uranus',  emoji:'⛢', period:30688.5},
-    {name:'Neptune', emoji:'♆', period:60182},
-    {name:'Moon',    emoji:'🌙', period:27.32},
-  ];
-
-  const MOON_PHASES = ['🌑 New Moon','🌒 Waxing Crescent','🌓 First Quarter','🌔 Waxing Gibbous',
-                       '🌕 Full Moon','🌖 Waning Gibbous','🌗 Last Quarter','🌘 Waning Crescent'];
-
-  const LIFE_PATH_DESC = {
-    1:'The Leader — independent, ambitious, pioneering',
-    2:'The Peacemaker — cooperative, sensitive, diplomatic',
-    3:'The Creator — expressive, social, optimistic',
-    4:'The Builder — practical, disciplined, reliable',
-    5:'The Adventurer — freedom-loving, curious, versatile',
-    6:'The Nurturer — caring, responsible, harmonious',
-    7:'The Seeker — analytical, introspective, spiritual',
-    8:'The Achiever — powerful, goal-oriented, successful',
-    9:'The Humanitarian — compassionate, generous, idealistic',
-    11:'The Visionary — intuitive, inspiring, enlightened',
-    22:'The Master Builder — visionary, practical, transformative',
-    33:'The Master Teacher — nurturing, selfless, uplifting'
-  };
-
-  // ── Helpers ──────────────────────────────────────────────────
-  function fmt(n) { return Math.round(n).toLocaleString(); }
-  function plural(n, w) { return `${n} ${w}${n !== 1 ? 's' : ''}`; }
-
-  function westernZodiac(m, d) {
-    const i = m - 1;
-    return d < ZODIAC_CUTS[i] ? W_ZODIAC[i === 0 ? 11 : i - 1] : W_ZODIAC[i];
-  }
-
-  function chineseZodiac(year) {
-    return C_ZODIAC[((year - 1900) % 12 + 12) % 12];
-  }
-
-  function moonPhase(date) {
-    // Approximate moon phase using known new moon reference (Jan 6 2000)
-    const ref = new Date('2000-01-06T00:00:00');
-    const days = (date - ref) / 86400000;
-    const cycle = ((days % 29.53) + 29.53) % 29.53;
-    return MOON_PHASES[Math.floor(cycle / (29.53 / 8))];
-  }
-
-  function lifePathNumber(dateStr) {
-    // Sum all digits of YYYYMMDD until single digit (or 11/22/33)
-    let sum = dateStr.replace(/-/g,'').split('').reduce((a,c) => a + parseInt(c), 0);
-    while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-      sum = String(sum).split('').reduce((a,c) => a + parseInt(c), 0);
-    }
-    return sum;
-  }
-
-  // ── Main calculate ────────────────────────────────────────────
-  function calculate() {
-    const val = document.getElementById('dob').value;
-    if (!val) { alert('Please enter your date of birth.'); return; }
-
-    const dob = new Date(val + 'T00:00:00');
-    const now = new Date();
-    if (dob > now) { alert('Date of birth cannot be in the future.'); return; }
-
-    const ms = now - dob;
-    const totalDays  = Math.floor(ms / 86400000);
-    const totalWeeks = Math.floor(totalDays / 7);
-    const totalHours = Math.floor(ms / 3600000);
-    const totalMins  = Math.floor(ms / 60000);
-
-    // Exact age
-    let y = now.getFullYear() - dob.getFullYear();
-    let mo = now.getMonth() - dob.getMonth();
-    let d = now.getDate() - dob.getDate();
-    if (d < 0) { mo--; d += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
-    if (mo < 0) { y--; mo += 12; }
-
-    // ── Main text
-    document.getElementById('main-text').textContent =
-      `You are ${plural(y,'year')}, ${plural(mo,'month')}, ${plural(d,'day')} old`;
-
-    // ── Time stats
-    document.getElementById('s-days').textContent  = fmt(totalDays);
-    document.getElementById('s-weeks').textContent = fmt(totalWeeks);
-    document.getElementById('s-hours').textContent = fmt(totalHours);
-    document.getElementById('s-mins').textContent  = fmt(totalMins);
-
-    // ── Body stats
-    document.getElementById('f-heartbeats').textContent = fmt(totalMins * 70);      // ~70 bpm
-    document.getElementById('f-breaths').textContent    = fmt(totalMins * 15);      // ~15 breaths/min
-    document.getElementById('f-blinks').textContent     = fmt(totalHours * 900);    // ~15/min = 900/hr
-    document.getElementById('f-sleep').textContent      = fmt(totalDays * 0.33);    // ~8h/day
-
-    // ── Planet ages
-    const planetHTML = PLANETS.map(p => {
-      const age = (totalDays / p.period).toFixed(1);
-      return `<div class="planet">
-        <div class="planet-emoji">${p.emoji}</div>
-        <div class="planet-val">${age}</div>
-        <div class="planet-lbl">${p.name}</div>
-      </div>`;
-    }).join('');
-    document.getElementById('planets').innerHTML = planetHTML;
-
-    // ── Milestones (days-based)
-    const MILESTONES = [
-      {days:1000,  label:'1,000 days old',  icon:'🎯'},
-      {days:5000,  label:'5,000 days old',  icon:'⭐'},
-      {days:10000, label:'10,000 days old', icon:'🏆'},
-      {days:15000, label:'15,000 days old', icon:'💎'},
-      {days:20000, label:'20,000 days old', icon:'👑'},
-      {days:25000, label:'25,000 days old', icon:'🌟'},
-      {days:30000, label:'30,000 days old', icon:'🚀'},
-    ];
-    let foundNext = false;
-    const msHTML = MILESTONES.map(m => {
-      const done = totalDays >= m.days;
-      const isNext = !done && !foundNext;
-      if (isNext) foundNext = true;
-      const daysLeft = m.days - totalDays;
-      const dateReached = new Date(dob.getTime() + m.days * 86400000);
-      const dateStr = dateReached.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-      return `<div class="milestone-item ${isNext ? 'next' : ''}">
-        <div class="milestone-icon">${m.icon}</div>
-        <div class="milestone-text">
-          <strong>${m.label}</strong><br>
-          <span style="font-size:12px">${done ? `Reached on ${dateStr}` : `In ${daysLeft.toLocaleString()} days — ${dateStr}`}</span>
+    <section class="card">
+      <div class="form-grid">
+        <div class="field">
+          <label for="start-date">Start date</label>
+          <input type="date" id="start-date" aria-label="Start date">
         </div>
-        <div class="milestone-badge ${done ? 'done' : ''}">${done ? '✅ Done' : isNext ? '⏳ Next' : ''}</div>
-      </div>`;
-    }).join('');
-    document.getElementById('milestones').innerHTML = msHTML;
+        <div class="field">
+          <label for="end-date">End date (optional)</label>
+          <input type="date" id="end-date" aria-label="End date">
+        </div>
+      </div>
 
-    // ── Identity
-    const [wSign, wEmoji] = westernZodiac(dob.getMonth() + 1, dob.getDate());
-    const [cSign, cEmoji] = chineseZodiac(dob.getFullYear());
-    const [stone, stoneEmoji] = BIRTHSTONES[dob.getMonth()];
-    const moon = moonPhase(dob);
-    const moonEmoji = moon.split(' ')[0];
-    const moonName  = moon.split(' ').slice(1).join(' ');
+      <div class="controls">
+        <button class="btn" id="calculate-btn" type="button">Calculate</button>
+        <button class="secondary-btn" id="reset-btn" type="button">Reset</button>
+      </div>
 
-    document.getElementById('id-wzodiac-icon').textContent = wEmoji;
-    document.getElementById('id-wzodiac').textContent = wSign;
-    document.getElementById('id-czodiac-icon').textContent = cEmoji;
-    document.getElementById('id-czodiac').textContent = cSign;
-    document.getElementById('id-stone-icon').textContent = stoneEmoji;
-    document.getElementById('id-stone').textContent = stone;
-    document.getElementById('id-moon-icon').textContent = moonEmoji;
-    document.getElementById('id-moon').textContent = moonName;
+      <div class="mode-switch">
+        <button type="button" data-mode="simple" class="active">Simple Result</button>
+        <button type="button" data-mode="detailed">Detailed Result</button>
+      </div>
 
-    // ── Lucky / Life Path number (rendered by setLuckyDesc after result shown)
+      <div id="message" class="message"></div>
+    </section>
 
-    // ── Next birthday
-    let nextBday = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
-    if (nextBday <= now) nextBday.setFullYear(now.getFullYear() + 1);
-    const daysUntil = Math.ceil((nextBday - now) / 86400000);
-    const bdayStr = nextBday.toLocaleDateString('en-US', { month:'long', day:'numeric' });
-    const bdayDow = nextBday.toLocaleDateString('en-US', { weekday:'long' });
+    <section class="card result-card" id="result-card" aria-live="polite">
+      <div class="result-header">
+        <span class="result-tag" id="result-tag">Age Calculation</span>
+        <h2 class="result-main" id="result-main">Your result will appear here</h2>
+        <p class="result-sub" id="result-sub">Enter a start date and press Calculate to see your age or date difference.</p>
+      </div>
 
-    document.getElementById('extra').innerHTML =
-      `🎂 Next birthday in <strong>${daysUntil} days</strong> — ${bdayDow}, ${bdayStr}`;
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" id="result-years">0</div><div class="stat-label">Years</div></div>
+        <div class="stat-card"><div class="stat-number" id="result-months">0</div><div class="stat-label">Months</div></div>
+        <div class="stat-card"><div class="stat-number" id="result-days">0</div><div class="stat-label">Days</div></div>
+        <div class="stat-card"><div class="stat-number" id="result-total-days">0</div><div class="stat-label">Total days</div></div>
+      </div>
 
-    const r = document.getElementById('result');
-    r.classList.remove('show'); void r.offsetWidth; r.classList.add('show');
-  }
+      <div class="detail-grid" id="result-details"></div>
 
-  // Fix lucky number description rendering
-  function setLuckyDesc(val) {
-    const lpn = lifePathNumber(val);
-    const desc = LIFE_PATH_DESC[lpn] || 'A unique and powerful number';
-    const lw = document.querySelector('.lucky-text');
-    lw.innerHTML = `<strong>Life Path Number</strong><br>${desc}`;
-  }
+      <div class="action-row">
+        <button class="btn" id="copy-btn" type="button">Copy Result</button>
+        <button class="secondary-btn" id="share-btn" type="button">Copy Share Link</button>
+      </div>
+    </section>
 
-  // Patch calculate to call setLuckyDesc
-  const _orig = calculate;
-  window.calculate = function() {
-    _orig();
-    const val = document.getElementById('dob').value;
-    if (val) setLuckyDesc(val);
-  };
+    <section class="info-grid">
+      <article class="section-block">
+        <h3>How to use this calculator</h3>
+        <p>Pick any start date and an optional end date. If you leave the end date empty, the tool uses today. Select simple view for a concise age statement, or detailed view for full duration, weekdays, zodiac signs, and countdown information.</p>
+        <ul>
+          <li>Calculate your current age from birth date to today.</li>
+          <li>Compare two dates for anniversaries, project timelines, or baby age.</li>
+          <li>Copy results instantly for chat, social posts, or documentation.</li>
+        </ul>
+      </article>
+      <article class="section-block faq">
+        <h3>FAQ</h3>
+        <dl>
+          <dt>What happens if I leave end date empty?</dt>
+          <dd>The calculator uses today as the end date, so you get your current age automatically.</dd>
+          <dt>Can I compare two past dates?</dt>
+          <dd>Yes. This page supports generic date ranges, not only birthdays.</dd>
+          <dt>How do I share results?</dt>
+          <dd>Click Copy Share Link to copy a URL with your input values and mode.</dd>
+        </dl>
+      </article>
+    </section>
 
-  document.getElementById('dob').addEventListener('keydown', e => { if (e.key === 'Enter') calculate(); });
-</script>
+    <section class="section-block">
+      <h3>Why use this tool</h3>
+      <p>This age calculator online free page is designed for people who need accurate, shareable time spans. It combines age calculation, date difference, and birthday countdown in one place so you don't need separate tools.</p>
+    </section>
 
-<!-- Cookie Consent Banner -->
-<div id="cookie-banner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:9999;
-  background:#1e293b;color:#e2e8f0;padding:16px 20px;
-  box-shadow:0 -4px 20px rgba(0,0,0,.2)">
-  <div style="max-width:680px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
-    <div style="flex:1;min-width:200px;font-size:13px;line-height:1.6">
-      🍪 We use cookies to analyze site traffic and improve your experience.
-      See our <a href="/privacy-policy.html" style="color:#a5b4fc">Privacy Policy</a>.
-    </div>
-    <div style="display:flex;gap:8px;flex-shrink:0">
-      <button onclick="acceptCookies()" style="padding:8px 18px;background:linear-gradient(135deg,#6366f1,#8b5cf6);
-        color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer">
-        Accept All
-      </button>
-      <button onclick="declineCookies()" style="padding:8px 18px;background:transparent;
-        color:#94a3b8;border:1px solid #475569;border-radius:8px;font-size:13px;cursor:pointer">
-        Decline
-      </button>
-    </div>
+    <section class="section-block">
+      <h3>Related calculators</h3>
+      <div class="related-links">
+        <a href="age-difference.html">Age difference calculator</a>
+        <a href="birthday-countdown.html">Birthday countdown</a>
+        <a href="date-calculator.html">Date calculator</a>
+        <a href="day-of-week.html">Day of week finder</a>
+      </div>
+    </section>
+
+    <footer>
+      <p>Free age calculator online free · Fast age and date difference tool · No sign-up required.</p>
+    </footer>
   </div>
-</div>
-<script>
-  (function() {
-    var consent = localStorage.getItem('cookie_consent');
-    if (!consent) document.getElementById('cookie-banner').style.display = 'block';
-  })();
-  function acceptCookies() {
-    localStorage.setItem('cookie_consent', 'accepted');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-  function declineCookies() {
-    localStorage.setItem('cookie_consent', 'declined');
-    document.getElementById('cookie-banner').style.display = 'none';
-  }
-</script>
 
-<!-- Footer -->
-<footer style="max-width:680px;margin:0 auto;padding:24px 20px 80px;
-  border-top:1px solid #e2e8f0;text-align:center;font-size:12px;color:#94a3b8;line-height:2">
-  <div style="margin-bottom:8px">
-    <a href="/privacy-policy.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Privacy Policy</a>
-    <a href="/terms-of-service.html" style="color:#6366f1;text-decoration:none;margin:0 10px">Terms of Service</a>
-    <a href="mailto:humianjia@gmail.com" style="color:#6366f1;text-decoration:none;margin:0 10px">Contact</a>
-  </div>
-  <div>© 2026 agecalculatoronlinefree.online · Free online calculators for everyone</div>
-  <div style="margin-top:4px">All results are estimates for informational purposes only.</div>
-</footer>
+  <script>
+    const W_ZODIAC = [
+      ['Capricorn','♑'],['Aquarius','♒'],['Pisces','♓'],['Aries','♈'],
+      ['Taurus','♉'],['Gemini','♊'],['Cancer','♋'],['Leo','♌'],
+      ['Virgo','♍'],['Libra','♎'],['Scorpio','♏'],['Sagittarius','♐']
+    ];
+    const ZODIAC_CUTS = [20,19,20,20,21,21,23,23,23,23,22,22];
+
+    const C_ZODIAC = [
+      ['Rat','🐀'],['Ox','🐂'],['Tiger','🐯'],['Rabbit','🐰'],['Dragon','🐉'],['Snake','🐍'],
+      ['Horse','🐴'],['Goat','🐑'],['Monkey','🐒'],['Rooster','🐓'],['Dog','🐕'],['Pig','🐷']
+    ];
+
+    const MOON_PHASES = ['🌑 New Moon','🌒 Waxing Crescent','🌓 First Quarter','🌔 Waxing Gibbous',
+                         '🌕 Full Moon','🌖 Waning Gibbous','🌗 Last Quarter','🌘 Waning Crescent'];
+
+    function fmt(value) {
+      return Number(value).toLocaleString();
+    }
+
+    function westernZodiac(month, day) {
+      const index = month - 1;
+      return day < ZODIAC_CUTS[index] ? W_ZODIAC[index === 0 ? 11 : index - 1] : W_ZODIAC[index];
+    }
+
+    function chineseZodiac(year) {
+      return C_ZODIAC[((year - 1900) % 12 + 12) % 12];
+    }
+
+    function daysInMonth(year, month) {
+      return new Date(year, month + 1, 0).getDate();
+    }
+
+    function formatDate(date) {
+      return new Intl.DateTimeFormat('en-US', { weekday:'long', month:'short', day:'numeric', year:'numeric' }).format(date);
+    }
+
+    function formatShort(date) {
+      return new Intl.DateTimeFormat('en-US', { month:'short', day:'numeric', year:'numeric' }).format(date);
+    }
+
+    function toIso(date) {
+      return date.toISOString().split('T')[0];
+    }
+
+    function computeSpan(start, end) {
+      let years = end.getFullYear() - start.getFullYear();
+      let months = end.getMonth() - start.getMonth();
+      let days = end.getDate() - start.getDate();
+      if (days < 0) {
+        months -= 1;
+        days += daysInMonth(end.getFullYear(), end.getMonth() - 1);
+      }
+      if (months < 0) {
+        years -= 1;
+        months += 12;
+      }
+      return { years, months, days };
+    }
+
+    function computeNextBirthday(start, base) {
+      const next = new Date(base.getFullYear(), start.getMonth(), start.getDate());
+      if (next <= base) next.setFullYear(base.getFullYear() + 1);
+      return next;
+    }
+
+    function showMessage(text, type = 'error') {
+      const message = document.getElementById('message');
+      message.textContent = text;
+      message.className = `message ${type}`;
+    }
+
+    function clearMessage() {
+      const message = document.getElementById('message');
+      message.textContent = '';
+      message.className = 'message';
+    }
+
+    let currentMode = 'detailed';
+
+    function setMode(mode) {
+      currentMode = mode === 'simple' ? 'simple' : 'detailed';
+      document.querySelectorAll('[data-mode]').forEach(button => {
+        button.classList.toggle('active', button.dataset.mode === currentMode);
+      });
+      if (document.getElementById('start-date').value) calculate();
+    }
+
+    function updateUrlParams() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('start', document.getElementById('start-date').value || '');
+      url.searchParams.set('end', document.getElementById('end-date').value || '');
+      url.searchParams.set('mode', currentMode);
+      window.history.replaceState(null, '', url.toString());
+    }
+
+    function calculate() {
+      clearMessage();
+      const startValue = document.getElementById('start-date').value;
+      const endValue = document.getElementById('end-date').value;
+      const today = new Date(toIso(new Date()) + 'T00:00:00');
+      const selectedEnd = endValue || toIso(new Date());
+
+      if (!startValue) {
+        showMessage('Please select a valid start date.');
+        return;
+      }
+
+      const startDate = new Date(startValue + 'T00:00:00');
+      const endDate = new Date(selectedEnd + 'T00:00:00');
+
+      if (isNaN(startDate) || isNaN(endDate)) {
+        showMessage('Please select valid dates.');
+        return;
+      }
+      if (startDate > endDate) {
+        showMessage('End date must be later than start date.');
+        return;
+      }
+      if (startDate > today && !endValue) {
+        showMessage('Birth date cannot be in the future.');
+        return;
+      }
+
+      const span = computeSpan(startDate, endDate);
+      const ms = endDate - startDate;
+      const totalDays = Math.floor(ms / 86400000);
+      const totalWeeks = Math.floor(totalDays / 7);
+      const totalHours = Math.floor(ms / 3600000);
+      const totalMinutes = Math.floor(ms / 60000);
+      const totalMonths = span.years * 12 + span.months;
+
+      const [westernName, westernEmoji] = westernZodiac(startDate.getMonth() + 1, startDate.getDate());
+      const [chineseName, chineseEmoji] = chineseZodiac(startDate.getFullYear());
+      const nextBirthday = computeNextBirthday(startDate, endDate);
+      const daysUntilNext = Math.max(0, Math.ceil((nextBirthday - endDate) / 86400000));
+      const nextBirthdayText = `${formatShort(nextBirthday)} · ${daysUntilNext} day${daysUntilNext === 1 ? '' : 's'}`;
+
+      const isTodayEnd = endDate.getTime() === today.getTime();
+      const resultType = isTodayEnd ? 'Age Calculation' : 'Date Difference';
+      const mainText = currentMode === 'simple'
+        ? span.years > 0
+          ? `${span.years} year${span.years === 1 ? '' : 's'} old`
+          : span.months > 0
+            ? `${span.months} month${span.months === 1 ? '' : 's'} old`
+            : `${span.days} day${span.days === 1 ? '' : 's'} old`
+        : `${span.years} years, ${span.months} months, ${span.days} days`;
+
+      document.getElementById('result-tag').textContent = resultType;
+      document.getElementById('result-main').textContent = mainText;
+      document.getElementById('result-sub').textContent = `${formatDate(startDate)} → ${formatDate(endDate)}`;
+      document.getElementById('result-years').textContent = span.years;
+      document.getElementById('result-months').textContent = span.months;
+      document.getElementById('result-days').textContent = span.days;
+      document.getElementById('result-total-days').textContent = fmt(totalDays);
+
+      const details = [
+        { label: 'Start date', value: formatDate(startDate) },
+        { label: 'End date', value: formatDate(endDate) },
+        { label: 'Start day', value: new Intl.DateTimeFormat('en-US', { weekday:'long' }).format(startDate) },
+        { label: 'End day', value: new Intl.DateTimeFormat('en-US', { weekday:'long' }).format(endDate) },
+        { label: 'Total months', value: fmt(totalMonths) },
+        { label: 'Total weeks', value: fmt(totalWeeks) },
+        { label: 'Total hours', value: fmt(totalHours) },
+        { label: 'Total minutes', value: fmt(totalMinutes) },
+        { label: 'Western zodiac', value: `${westernName} ${westernEmoji}` },
+        { label: 'Chinese zodiac', value: `${chineseName} ${chineseEmoji}` },
+        { label: 'Next birthday', value: nextBirthdayText }
+      ];
+
+      document.getElementById('result-details').innerHTML = details.map(item =>
+        `<div class="detail-item"><strong>${item.label}</strong><span>${item.value}</span></div>`
+      ).join('');
+
+      document.getElementById('result-card').classList.add('visible');
+      updateUrlParams();
+    }
+
+    function copyResult() {
+      const main = document.getElementById('result-main').textContent;
+      const sub = document.getElementById('result-sub').textContent;
+      const details = Array.from(document.querySelectorAll('.detail-item')).map(item => {
+        const label = item.querySelector('strong').textContent;
+        const value = item.querySelector('span').textContent;
+        return `${label}: ${value}`;
+      }).join('\n');
+      const text = `Age calculator online free result:\n${main}\n${sub}\n\n${details}`;
+      navigator.clipboard.writeText(text).then(() => showMessage('Result copied to clipboard.', 'success'))
+        .catch(() => showMessage('Unable to copy result. Please try again.'));
+    }
+
+    function copyShareLink() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('start', document.getElementById('start-date').value || '');
+      url.searchParams.set('end', document.getElementById('end-date').value || '');
+      url.searchParams.set('mode', currentMode);
+      navigator.clipboard.writeText(url.toString()).then(() => {
+        showMessage('Share link copied to clipboard.', 'success');
+        updateUrlParams();
+      }).catch(() => showMessage('Unable to copy share link.'));
+    }
+
+    function resetForm() {
+      document.getElementById('start-date').value = '';
+      document.getElementById('end-date').value = toIso(new Date());
+      document.getElementById('result-card').classList.remove('visible');
+      clearMessage();
+      setMode('detailed');
+      history.replaceState(null, '', window.location.pathname);
+    }
+
+    function restoreFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const start = params.get('start');
+      const end = params.get('end');
+      const mode = params.get('mode');
+      if (start) document.getElementById('start-date').value = start;
+      if (end) document.getElementById('end-date').value = end;
+      if (mode) setMode(mode);
+      if (start) calculate();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('start-date').max = toIso(new Date());
+      document.getElementById('end-date').max = toIso(new Date());
+      document.getElementById('end-date').value = toIso(new Date());
+      document.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => setMode(button.dataset.mode)));
+      document.getElementById('calculate-btn').addEventListener('click', calculate);
+      document.getElementById('copy-btn').addEventListener('click', copyResult);
+      document.getElementById('share-btn').addEventListener('click', copyShareLink);
+      document.getElementById('reset-btn').addEventListener('click', resetForm);
+      ['start-date', 'end-date'].forEach(id => {
+        document.getElementById(id).addEventListener('keydown', event => {
+          if (event.key === 'Enter') calculate();
+        });
+      });
+      restoreFromUrl();
+    });
+  </script>
 </body>
 </html>
